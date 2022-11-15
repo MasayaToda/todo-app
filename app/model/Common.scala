@@ -14,3 +14,8 @@ trait ViewValueCommon {
   val cssSrc: Seq[String] // pageで読み込むcssのファイル名
   val jsSrc:  Seq[String] // pageで読み込むjavascriptのファイル名
 }
+
+object ViewValueCommon {
+  val defaultCssSrc: Seq[String] = Seq("bootstrap.min.css")
+  val defaultJsSrc: Seq[String]  = Seq("bootstrap.min.js", "jquery.3.6.1.min.js")
+}

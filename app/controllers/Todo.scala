@@ -10,14 +10,19 @@ import play.api.data.Forms._
 
 import lib.model.Todo
 import lib.model.Todo._
+import lib.persistence._
+
+import model._
 
 @Singleton
 class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 ) extends BaseController {
   def index() = Action { implicit req =>
-    val testTodoList = Seq(Todo(Some(Id(1)),1,"タイトル","本文",LocalDateTime.now,LocalDateTime.now))
-    Ok(views.html.todo.list(testTodoList)(views.html.todo.add()))
+    val vv = ViewValueTodo(
+      data = Seq(Todo(Some(Id(1)),1,"タイトル","本文",LocalDateTime.now,LocalDateTime.now))
+    )
+    Ok(views.html.todo.list(vv)(views.html.todo.add(vv)))
   }
   def show(id:Long) = Action { implicit req =>
     val testTodo = Todo(Some(Id(id)),1,"タイトル","本文",LocalDateTime.now,LocalDateTime.now)

@@ -17,6 +17,8 @@ object Todo {
   
   val  Id = the[Identity[Id]]
   type Id = Long @@ Todo
+  type WithNoId = Entity.WithNoId [Id, Todo]
+  type EmbeddedId = Entity.EmbeddedId[Id, Todo]
 
   def build(categoryId: Int,title: String, body: String): Todo#WithNoId = {
     new Entity.WithNoId(

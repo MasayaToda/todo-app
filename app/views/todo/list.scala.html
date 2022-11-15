@@ -1,0 +1,41 @@
+@(vv: model.ViewValueTodo)(add:Html)
+@common.default(vv){
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/page/todo">Todoアプリ</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/page/todo">Todo</a>
+          </li>
+      </div>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="card">
+          <div class="card-header d-flex">
+            <div class="flex-grow-1">Todo一覧</div>
+            <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-primary">Todo追加</button></div>
+          </div>
+          <div class="list-group">
+            @for(v <- vv.data){
+              <a href="@controllers.routes.TodoController.show(v.id.getOrElse(0))" class="list-group-item list-group-item-action" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">@v.title</h5>
+                  <small>@v.updatedAt</small>
+                </div>
+                <p class="mb-1">@v.body</p>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @add
+}

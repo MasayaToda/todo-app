@@ -24,18 +24,18 @@ class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 ) extends BaseController {
   
-  def index() = Action async { implicit req =>
+  def page_list() = Action async { implicit req =>
     for {
       todo <- TodoRepository.index()
     } yield {
       val vv = ViewValueTodoList(
         data = todo
       )
-      Ok(views.html.todo.list(vv)(views.html.todo.add(vv)))
+      Ok(views.html.todo.list(vv))
     }
   }
 
-  def show(id:Long) = Action async { implicit req =>
+  def page_show(id:Long) = Action async { implicit req =>
     for {
       optionTodo <- TodoRepository.get(Todo.Id(id))
     } yield {
@@ -50,5 +50,11 @@ class TodoController @Inject()(
         }
       }
     }
+  }
+  def page_add() = Action { implicit req =>
+    val vv = ViewValueTodoAdd(
+      form = TodoForm()
+    )
+    Ok(views.html.todo.add(vv))
   }
 }

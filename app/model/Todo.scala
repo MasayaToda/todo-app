@@ -1,5 +1,6 @@
 package model
 
+import java.time.LocalDate
 import lib.model.Todo
 import lib.model.Todo._
 /**
@@ -30,3 +31,20 @@ case class ViewValueTodoList(
 case class ViewValueTodoShow(
   data: Todo 
 ) extends ViewValueTodo
+
+/**
+  * 
+  *
+  * @param data
+  */
+case class ViewValueTodoAdd(
+  form: TodoForm 
+) extends ViewValueTodo
+
+case class TodoForm(
+    title: String,
+    categoryId: Long,
+    content: String,
+    state: Short,
+    deadline: LocalDate
+)

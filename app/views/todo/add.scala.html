@@ -1,27 +1,31 @@
-@(vv: model.ViewValueTodo)
-<div class="modal" id="addmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Todo追加</h5>
-            <button type="button" class="btn-close addmodal-close-func" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label for="input_title" class="form-label">タイトル</label>
-              <input type="text" class="form-control" id="input_title" placeholder="何かタイトル">
-            </div>
-            <div class="mb-3">
-              <label for="input_body" class="form-label">本文</label>
-              <textarea class="form-control" id="input_body" rows="5"></textarea>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary addmodal-close-func" data-bs-dismiss="modal">閉じる</button>
-            <button type="button" class="btn btn-primary">追加</button>
-        </div>
-        </div>
+@import helper._
+
+@(v:model.ViewValueTodoAdd)
+@common.default(v){
+  <div class="container">
+    <div class="card">
+      <div class="card-header d-flex">
+        <div class="flex-grow-1">Todo一覧</div>
+        <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-primary">Todo追加</button></div>
+      </div>
+      <div class="card-body">
+        @form(action = controllers.routes.TodoController.add()){
+          @CSRF.formField
+          <div class="mb-3">
+            <label for="input_title" class="form-label">タイトル</label>
+            <input type="text" class="form-control" id="input_title" placeholder="何かタイトル">
+          </div>
+          <div class="mb-3">
+            <label for="input_body" class="form-label">本文</label>
+            <textarea class="form-control" id="input_body" rows="5"></textarea>
+          </div>
+        }
+        
+      </div>
+      <div class="card-footer">
+        <button type="button" class="btn btn-secondary addmodal-close-func" data-bs-dismiss="modal">閉じる</button>
+        <button type="submit" class="btn btn-primary">追加</button>
+      </div>
     </div>
-</div>
+  </div>
+}

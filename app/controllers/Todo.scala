@@ -40,7 +40,7 @@ class TodoController @Inject()(
       optionTodo <- TodoRepository.get(Todo.Id(id))
     } yield {
       optionTodo match {
-        case None => throw new Exception("Error")
+        case None => NotFound("Todo=" + id + " は存在しません。");
         case Some(todoEmbed) => {
           // println(todo)
           val vv = ViewValueTodoShow(

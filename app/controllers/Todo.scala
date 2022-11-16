@@ -52,8 +52,28 @@ class TodoController @Inject()(
     }
   }
   def page_add() = Action { implicit req =>
+    val todoForm = Form (
+      mapping(
+        "categoryId" -> longNumber,
+        "title" -> nonEmptyText,
+        "body"  -> nonEmptyText,
+      )(Todo.FormValue.apply)(Todo.FormValue.unapply)
+    )
     val vv = ViewValueTodoAdd(
-      form = TodoForm()
+      form = todoForm
+    )
+    Ok(views.html.todo.add(vv))
+  }
+  def add() = Action { implicit req =>
+    val todoForm = Form (
+      mapping(
+        "categoryId" -> longNumber,
+        "title" -> nonEmptyText,
+        "body"  -> nonEmptyText,
+      )(Todo.FormValue.apply)(Todo.FormValue.unapply)
+    )
+    val vv = ViewValueTodoAdd(
+      form = todoForm
     )
     Ok(views.html.todo.add(vv))
   }

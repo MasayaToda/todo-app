@@ -41,4 +41,5 @@ object Todo {
       )
     )
   }
+  case class FormValue (categoryId: Long, title: String, body: String)
 }

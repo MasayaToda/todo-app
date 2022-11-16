@@ -9,7 +9,7 @@ GET     /page/todo/:id          controllers.TodoController.page_show(id:Long)
 GET     /page/todo              controllers.TodoController.page_add
 # Todo API
 # GET     /api/todo             controllers.TodoController.getAll
-# POST    /api/todo             controllers.TodoController.add
+POST    /api/todo             controllers.TodoController.add
 # GET     /api/todo/:id         controllers.TodoController.get(id)
 # PUT     /api/todo/:id         controllers.TodoController.update(id)
 # DELETE  /api/todo/:id         controllers.TodoController.delete(id)

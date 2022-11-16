@@ -4,10 +4,10 @@
   <div class="card">
     <div class="card-header d-flex">
       <div class="flex-grow-1">Todo一覧</div>
-      <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-primary">Todo追加</button></div>
     </div>
-    <div class="card-body">
-      @form(action = controllers.routes.TodoController.add()){
+    @form(action = controllers.routes.TodoController.add()){
+      @CSRF.formField
+      <div class="card-body">
         <div class="mb-3">
           <label for="input_title" class="form-label">タイトル</label>
           @inputText(vv.form("title"), 'class -> "form-control", 'placeholder -> "何かタイトル")
@@ -16,12 +16,10 @@
           <label for="input_body" class="form-label">本文</label>
           @textarea(vv.form("title"), 'class -> "form-control",'rows -> "5", 'placeholder -> "何かタイトル")
         </div>
-      }
-      
-    </div>
-    <div class="card-footer">
-      <button type="button" class="btn btn-secondary addmodal-close-func" data-bs-dismiss="modal">閉じる</button>
-      <button type="submit" class="btn btn-primary">追加</button>
-    </div>
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">追加</button>
+      </div>
+    }
   </div>
 }

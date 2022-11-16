@@ -99,13 +99,15 @@ class TodoController @Inject()(
   def page_edit(id:Long) = Action async { implicit req =>
     for {
       optionTodo <- TodoRepository.get(Todo.Id(id))
+      categoryEmbed <- CategoryRepository.index()
     } yield {
       optionTodo match {
         case None => NotFound("Todo=" + id + " は存在しません。");
         case Some(todoEmbed) => {
           // println(todo)
           val vv = ViewValueTodoEdit(
-            data = todoEmbed.v,
+            categories = categoryEmbed.map(category => (category.id.toString -> category.v.name)),
+            id = todoEmbed.id,
             form = todoForm.fill(
               Todo.TodoFormValue(
                 todoEmbed.v.categoryId,
@@ -177,10 +179,10 @@ class TodoController @Inject()(
       successform => {
         val todoEmbededId = new Todo(
           id = Some(Todo.Id(id)),
-          categoryId = Category.Id(1), // categoryID 一旦固定値
+          categoryId = Category.Id(successform.categoryId),
           title = successform.title,
           body = successform.body,
-          state = Todo.Status.IS_INACTIVE,
+          state = Todo.Status.apply(successform.state.toShort),
         ).toEmbeddedId //EmbededId型に変換
         for {
           _ <- TodoRepository.update(todoEmbededId)

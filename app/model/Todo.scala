@@ -46,7 +46,8 @@ case class ViewValueTodoAdd(
 ) extends ViewValueTodo
 
 case class ViewValueTodoEdit(
-  data: Todo ,
+  categories: Seq[(String,String)],
+  id: Long ,
   form: Form[TodoFormValue] 
 ) extends ViewValueTodo
 

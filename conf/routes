@@ -9,7 +9,7 @@ POST    /page/todo/create            controllers.TodoController.page_add_submit
 GET     /page/todo/show              controllers.TodoController.page_list
 GET     /page/todo/show/:id          controllers.TodoController.page_show(id:Long)
 GET     /page/todo/show/:id/edit     controllers.TodoController.page_edit(id:Long)
-PUT     /page/todo/show/:id/update     controllers.TodoController.page_update_submit(id:Long)
+POST     /page/todo/show/:id/update     controllers.TodoController.page_update_submit(id:Long)
 GET     /page/todo/show/:id/delete     controllers.TodoController.page_delete(id:Long)
 # Todo API
 # GET     /api/todo             controllers.TodoController.getAll

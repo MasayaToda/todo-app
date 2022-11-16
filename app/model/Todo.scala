@@ -43,6 +43,11 @@ case class ViewValueTodoAdd(
   form: Form[FormValue] 
 ) extends ViewValueTodo
 
+case class ViewValueTodoEdit(
+  data: Todo ,
+  form: Form[FormValue] 
+) extends ViewValueTodo
+
 case class TodoForm(
     // categoryId: Long,
     title: String,

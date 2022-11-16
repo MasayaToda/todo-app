@@ -8,6 +8,8 @@ GET     /page/todo/register          controllers.TodoController.page_add
 POST    /page/todo/create            controllers.TodoController.page_add_submit
 GET     /page/todo/show              controllers.TodoController.page_list
 GET     /page/todo/show/:id          controllers.TodoController.page_show(id:Long)
+GET     /page/todo/show/:id/edit     controllers.TodoController.page_edit(id:Long)
+GET     /page/todo/show/:id/update     controllers.TodoController.page_update_submit(id:Long)
 # Todo API
 # GET     /api/todo             controllers.TodoController.getAll
 # POST    /api/todo             controllers.TodoController.add

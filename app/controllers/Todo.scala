@@ -66,6 +66,28 @@ class TodoController @Inject()(
     )
     Ok(views.html.todo.add(vv))
   }
+  def page_edit(id:Long) = Action async { implicit req =>
+    for {
+      optionTodo <- TodoRepository.get(Todo.Id(id))
+    } yield {
+      optionTodo match {
+        case None => NotFound("Todo=" + id + " は存在しません。");
+        case Some(todoEmbed) => {
+          // println(todo)
+          val vv = ViewValueTodoEdit(
+            data = todoEmbed.v,
+            form = todoForm.fill(
+              Todo.FormValue(
+                todoEmbed.v.title,
+                todoEmbed.v.body,
+              )
+            )
+          )
+          Ok(views.html.todo.edit(vv))
+        }
+      }
+    }
+  }
   def page_add_submit() = Action async { implicit req =>
     todoForm.bindFromRequest.fold(
       errorform => {
@@ -91,6 +113,36 @@ class TodoController @Inject()(
         } yield {
           Redirect(routes.TodoController.page_list())
                   .flashing("success" -> "Todoを追加しました!!")
+        }
+      }
+    )
+  }
+  def page_update_submit(id:Long) = Action async { implicit req =>
+    todoForm.bindFromRequest.fold(
+      errorform => {
+        // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
+        for {
+          todo <- TodoRepository.index()
+        } yield {
+          val vv = ViewValueError(
+            message = errorform.toString
+          )
+          BadRequest(views.html.error(vv))
+        }
+      },
+      successform => {
+        val todoEmbededId = new Todo(
+          id = Some(Todo.Id(id)),
+          categoryId = 1, // categoryID 一旦固定値
+          title = successform.title,
+          body = successform.body,
+          state = Todo.Status.IS_INACTIVE,
+        ).toEmbeddedId //EmbededId型に変換
+        for {
+          _ <- TodoRepository.update(todoEmbededId)
+        } yield {
+          Redirect(routes.TodoController.page_list())
+                  .flashing("success" -> "Todoを更新しました!!")
         }
       }
     )

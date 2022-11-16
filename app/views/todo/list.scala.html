@@ -11,7 +11,7 @@
         </div>
         <div class="list-group">
           @for(v <- vv.data){
-            <a href="@controllers.routes.TodoController.page_show(v.id.getOrElse(0))" class="list-group-item list-group-item-action" aria-current="true">
+            <a href="@controllers.routes.TodoController.page_show(v.id)" class="list-group-item list-group-item-action" aria-current="true">
               <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1">@v.id <span class="badge bg-secondary">カテゴリ: @v.categoryId</span> @v.title</h5>
                 <div class="d-flex flex-column">

@@ -4,19 +4,19 @@ import scala.concurrent.Future
 import slick.jdbc.JdbcProfile
 import ixias.persistence.SlickRepository
 
-import lib.model.Todo  // ixias.modelで定義したものをimport
+import lib.model.Category  // ixias.modelで定義したものをimport
 
-case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
-  extends SlickRepository[Todo.Id, Todo, P]
+case class CategoryRepository[P <: JdbcProfile]()(implicit val driver: P)
+  extends SlickRepository[Category.Id, Category, P]
   with db.SlickResourceProvider[P] {
 
   import api._
   def index(): Future[Seq[EntityEmbeddedId]] =
-    RunDBAction(TodoTable, "slave") { _
+    RunDBAction(CategoryTable, "slave") { _
       .result
   }
   def get(id: Id): Future[Option[EntityEmbeddedId]] =
-    RunDBAction(TodoTable, "slave") { _
+    RunDBAction(CategoryTable, "slave") { _
       .filter(_.id === id)
       .result.headOption
   }
@@ -25,11 +25,11 @@ case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
     * Add User Data
    */
   def add(entity: EntityWithNoId): Future[Id] =
-    RunDBAction(TodoTable) { slick =>
+    RunDBAction(CategoryTable) { slick =>
       slick returning slick.map(_.id) += entity.v
     }
   def update(entity: EntityEmbeddedId): Future[Option[EntityEmbeddedId]] =
-    RunDBAction(TodoTable) { slick =>
+    RunDBAction(CategoryTable) { slick =>
       val row = slick.filter(_.id === entity.id)
       for {
         old <- row.result.headOption
@@ -40,7 +40,7 @@ case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
       } yield old
     }
   def remove(id: Id): Future[Option[EntityEmbeddedId]] =
-    RunDBAction(TodoTable) { slick =>
+    RunDBAction(CategoryTable) { slick =>
       val row = slick.filter(_.id === id)
       for {
         old <- row.result.headOption

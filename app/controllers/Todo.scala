@@ -13,9 +13,8 @@ import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 import ixias.model.IdStatus.Exists
 
-import lib.model.Todo
-import lib.model.Todo._
-import lib.persistence.default.TodoRepository
+import lib.model._
+import lib.persistence.default.{TodoRepository, CategoryRepository}
 
 import model._
 import java.lang.Exception
@@ -26,19 +25,33 @@ class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 )(implicit ec: ExecutionContext
 )extends BaseController with I18nSupport {
-  val todoForm: Form[Todo.FormValue] = Form (
+  val todoForm: Form[Todo.TodoFormValue] = Form (
       mapping(
-        // "categoryId" -> longNumber,
+        "categoryId" -> longNumber,
         "title" -> nonEmptyText,
         "body"  -> nonEmptyText,
-      )(Todo.FormValue.apply)(Todo.FormValue.unapply)
+        "state" -> shortNumber,
+      )(Todo.TodoFormValue.apply)(Todo.TodoFormValue.unapply)
     )
   def page_list() = Action async { implicit req =>
     for {
-      todo <- TodoRepository.index()
+      todoEmbed <- TodoRepository.index()
+      categoryEmbed <- CategoryRepository.index()
     } yield {
       val vv = ViewValueTodoList(
-        data = todo
+        data = todoEmbed.map(todo=>{
+          TodoCategory(
+            todo.id,
+            todo.v.categoryId,
+            todo.v.title,
+            todo.v.body,
+            todo.v.state,
+            todo.v.createdAt,
+            todo.v.updatedAt,
+            categoryEmbed.find(_.id == todo.v.categoryId).map(_.v.name),
+            categoryEmbed.find(_.id == todo.v.categoryId).map(_.v.color),
+          )
+        })
       )
       Ok(views.html.todo.list(vv))
     }
@@ -77,9 +90,11 @@ class TodoController @Inject()(
           val vv = ViewValueTodoEdit(
             data = todoEmbed.v,
             form = todoForm.fill(
-              Todo.FormValue(
+              Todo.TodoFormValue(
+                todoEmbed.v.categoryId,
                 todoEmbed.v.title,
                 todoEmbed.v.body,
+                todoEmbed.v.state.code,
               )
             )
           )
@@ -115,7 +130,7 @@ class TodoController @Inject()(
       },
       successform => {
         val todo = Todo.apply(
-          1, // categoryID 一旦固定値
+          Category.Id(1), // categoryID 一旦固定値
           successform.title,
           successform.body,
           Todo.Status.IS_INACTIVE
@@ -145,7 +160,7 @@ class TodoController @Inject()(
       successform => {
         val todoEmbededId = new Todo(
           id = Some(Todo.Id(id)),
-          categoryId = 1, // categoryID 一旦固定値
+          categoryId = Category.Id(1), // categoryID 一旦固定値
           title = successform.title,
           body = successform.body,
           state = Todo.Status.IS_INACTIVE,

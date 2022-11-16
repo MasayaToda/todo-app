@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import Todo._
 case class Todo (
   id:         Option[Id],
-  categoryId: Long,
+  categoryId: Category.Id,
   title:      String,
   body:       String,
   state:       Status = Status.IS_INACTIVE,
@@ -29,7 +29,7 @@ object Todo {
     case object IS_DOING   extends Status(code = 1, name = "進行中")
     case object IS_DONE   extends Status(code = 2, name = "完了")
   }
-  def apply(categoryId: Long,title: String, body: String, state: Status): WithNoId = {
+  def apply(categoryId: Category.Id,title: String, body: String, state: Status): WithNoId = {
     new Entity.WithNoId(
       new Todo(
         id    = None,
@@ -40,7 +40,10 @@ object Todo {
       )
     )
   }
-  case class FormValue (
-    // categoryId: Long,
-    title: String, body: String)
+  case class TodoFormValue (
+    categoryId: Long,
+    title: String,
+    body: String,
+    state: Short,
+  )
 }

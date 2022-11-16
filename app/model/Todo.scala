@@ -1,10 +1,11 @@
 package model
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 import play.api.data.Form
 import play.api.data.Forms._
-import lib.model.Todo
+import lib.model.{Todo, Category}
 import lib.model.Todo._
+import lib.model.Category._
 /**
   * Todo画面系の親ViewValue
   */
@@ -23,7 +24,7 @@ class ViewValueTodo(
   * @param data
   */
 case class ViewValueTodoList(
-  data: Seq[Todo]
+  data: Seq[TodoCategory]
 ) extends ViewValueTodo
 /**
   * Todo参照のViewValue
@@ -40,16 +41,27 @@ case class ViewValueTodoShow(
   * @param data
   */
 case class ViewValueTodoAdd(
-  form: Form[FormValue] 
+  form: Form[TodoFormValue] 
 ) extends ViewValueTodo
 
 case class ViewValueTodoEdit(
   data: Todo ,
-  form: Form[FormValue] 
+  form: Form[TodoFormValue] 
 ) extends ViewValueTodo
 
 case class TodoForm(
     // categoryId: Long,
     title: String,
     body: String,
+)
+case class TodoCategory(
+    id: Todo.Id,
+    categoryId: Category.Id,
+    title: String,
+    body: String,
+    state: Status,
+    createdAt: LocalDateTime,
+    updatedAt: LocalDateTime,
+    categoryName: Option[String],
+    categoryColor: Option[Color]
 )

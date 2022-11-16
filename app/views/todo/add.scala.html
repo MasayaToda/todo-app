@@ -1,4 +1,5 @@
 @import helper._
+@import lib.model.{Todo, Category }
 @(vv:model.ViewValueTodoAdd)(implicit requestHeader: RequestHeader, messagesPrivider: MessagesProvider)
 @common.default(vv){
   <div class="card">
@@ -12,7 +13,22 @@
           @inputText(vv.form("title"), 'class -> "form-control", 'placeholder -> "何かタイトル")
         </div>
         <div class="mb-3">
-          @textarea(vv.form("body"), 'class -> "form-control",'rows -> "5", 'placeholder -> "何かタイトル")
+          @inputText(vv.form("categoryId"), 'class -> "form-control", 'list -> "categoryList", 'placeholder -> "何かカテゴリ")
+          <datalist id="categoryList">
+            @for(category <- vv.categories){
+              <option value="@category._1">@category._2</option>
+            }
+          </datalist>
+        </div>
+        <div class="mb-3">
+          @textarea(vv.form("body"), 'class -> "form-control",'rows -> "5", 'placeholder -> "何か本文")
+        </div>
+        <div class="mb-3">
+          @input(vv.form("state")) { (id, name, value, args) =>
+            <select class="form-select" name="@name" id="@id">
+          }
+            <option value="@Todo.Status.IS_INACTIVE.code" selected>@Todo.Status.IS_INACTIVE.name</option>
+          </select>
         </div>
       </div>
       <div class="card-footer">

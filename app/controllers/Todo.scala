@@ -84,11 +84,17 @@ class TodoController @Inject()(
       }
     }
   }
-  def page_add() = Action { implicit req =>
-    val vv = ViewValueTodoAdd(
-      form = todoForm
-    )
-    Ok(views.html.todo.add(vv))
+  def page_add() = Action async { implicit req =>
+    for {
+      categoryEmbed <- CategoryRepository.index()
+    } yield {
+      val vv = ViewValueTodoAdd(
+        categories = categoryEmbed.map(category => (category.id.toString -> category.v.name)),
+        form = todoForm
+      )
+      Ok(views.html.todo.add(vv))
+    }
+    
   }
   def page_edit(id:Long) = Action async { implicit req =>
     for {
@@ -141,10 +147,10 @@ class TodoController @Inject()(
       },
       successform => {
         val todo = Todo.apply(
-          Category.Id(1), // categoryID 一旦固定値
+          Category.Id(successform.categoryId),
           successform.title,
           successform.body,
-          Todo.Status.IS_INACTIVE
+          Todo.Status.apply(successform.state.toShort)
         )
         for {
           _ <- TodoRepository.add(todo)

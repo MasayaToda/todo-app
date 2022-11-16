@@ -41,6 +41,7 @@ case class ViewValueTodoShow(
   * @param data
   */
 case class ViewValueTodoAdd(
+  categories: Seq[(String,String)],
   form: Form[TodoFormValue] 
 ) extends ViewValueTodo
 

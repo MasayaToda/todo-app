@@ -13,7 +13,7 @@
           @for(v <- vv.data){
             <a href="@controllers.routes.TodoController.page_show(v.id)" class="list-group-item list-group-item-action" aria-current="true">
               <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@v.id <span class="badge bg-secondary">カテゴリ: @v.categoryId</span> @v.title</h5>
+                <h5 class="mb-1">@v.id <span class="badge bg-@v.categoryColor.getOrElse('secondary)">@v.categoryName.getOrElse('未設定)</span> @v.title</h5>
                 <div class="d-flex flex-column">
                   <small>作成: @v.createdAt</small>
                   <small>更新: @v.updatedAt</small>

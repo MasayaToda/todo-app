@@ -63,5 +63,5 @@ case class TodoCategory(
     createdAt: LocalDateTime,
     updatedAt: LocalDateTime,
     categoryName: Option[String],
-    categoryColor: Option[Color]
+    categoryColor: Option[String]
 )

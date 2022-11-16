@@ -49,7 +49,7 @@ class TodoController @Inject()(
             todo.v.createdAt,
             todo.v.updatedAt,
             categoryEmbed.find(_.id == todo.v.categoryId).map(_.v.name),
-            categoryEmbed.find(_.id == todo.v.categoryId).map(_.v.color),
+            categoryEmbed.find(_.id == todo.v.categoryId).map(_.v.color.css),
           )
         })
       )

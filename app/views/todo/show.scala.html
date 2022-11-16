@@ -1,22 +1,20 @@
 @(v:model.ViewValueTodoShow)
 @common.default(v){
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="card">
-          <div class="card-header d-flex">
-            <div class="flex-grow-1">@v.data.title</div>
-            <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-primary">Todo編集</button></div>
-            <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-danger">Todo削除</button></div>
-          </div>
-          <div class="card-body">
-            <p class="card-text">@v.data.body</p>
-          </div>
-          <div class="card-footer text-muted">
-            @v.data.updatedAt
-          </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header d-flex">
+          <div class="flex-grow-1">@v.data.title</div>
+          <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-primary">Todo編集</button></div>
+          <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-danger">Todo削除</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-text">@v.data.body</p>
+        </div>
+        <div class="card-footer text-muted">
+          @v.data.updatedAt
         </div>
       </div>
     </div>
   </div>
-  }
+}

@@ -4,13 +4,13 @@ import javax.inject._
 import java.awt.Desktop.Action
 import java.time.LocalDateTime
 import scala.concurrent._
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.{Success, Failure}
 import play.api._
 import play.api.mvc._
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.i18n.I18nSupport
 import ixias.model.IdStatus.Exists
 
 import lib.model.Todo
@@ -22,7 +22,8 @@ import java.lang.Exception
 @Singleton
 class TodoController @Inject()(
   val controllerComponents: ControllerComponents
-) extends BaseController {
+)(implicit ec: ExecutionContext
+)extends BaseController with I18nSupport {
   
   def page_list() = Action async { implicit req =>
     for {
@@ -40,7 +41,7 @@ class TodoController @Inject()(
       optionTodo <- TodoRepository.get(Todo.Id(id))
     } yield {
       optionTodo match {
-        case None => throw new Exception("Error")
+        case None => NotFound("Todo=" + id + " は存在しません。");
         case Some(todoEmbed) => {
           // println(todo)
           val vv = ViewValueTodoShow(

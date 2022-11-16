@@ -88,6 +88,18 @@ class TodoController @Inject()(
       }
     }
   }
+  def page_delete(id: Long) = Action async { implicit req =>
+      val todoId = Todo.Id(id)
+      for {
+        todoDelete <- TodoRepository.remove(todoId)
+      } yield {
+        todoDelete match {
+          case _ =>
+            Redirect(routes.TodoController.page_list())
+              .flashing("success" -> "Todoを削除しました")
+        }
+      }
+  }
   def page_add_submit() = Action async { implicit req =>
     todoForm.bindFromRequest.fold(
       errorform => {

@@ -60,13 +60,24 @@ class TodoController @Inject()(
   def page_show(id:Long) = Action async { implicit req =>
     for {
       optionTodo <- TodoRepository.get(Todo.Id(id))
+      categoryEmbed <- CategoryRepository.index()
     } yield {
       optionTodo match {
         case None => NotFound("Todo=" + id + " は存在しません。");
         case Some(todoEmbed) => {
           // println(todo)
           val vv = ViewValueTodoShow(
-            data = todoEmbed.v
+            data = TodoCategory(
+              todoEmbed.id,
+              todoEmbed.v.categoryId,
+              todoEmbed.v.title,
+              todoEmbed.v.body,
+              todoEmbed.v.state,
+              todoEmbed.v.createdAt,
+              todoEmbed.v.updatedAt,
+              categoryEmbed.find(_.id == todoEmbed.v.categoryId).map(_.v.name),
+              categoryEmbed.find(_.id == todoEmbed.v.categoryId).map(_.v.color.css),
+            )
           )
           Ok(views.html.todo.show(vv))
         }

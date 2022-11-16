@@ -32,7 +32,7 @@ case class ViewValueTodoList(
   * @param data
   */
 case class ViewValueTodoShow(
-  data: Todo 
+  data: TodoCategory 
 ) extends ViewValueTodo
 
 /**

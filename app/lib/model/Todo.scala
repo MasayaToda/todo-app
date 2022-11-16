@@ -10,7 +10,7 @@ case class Todo (
   categoryId: Long,
   title:      String,
   body:       String,
-  state:       Status,
+  state:       Status = Status.IS_INACTIVE,
   updatedAt:  LocalDateTime = NOW,
   createdAt:  LocalDateTime = NOW
 )extends EntityModel[Id]
@@ -29,8 +29,7 @@ object Todo {
     case object IS_DOING   extends Status(code = 1, name = "進行中")
     case object IS_DONE   extends Status(code = 2, name = "完了")
   }
-
-  def build(categoryId: Long,title: String, body: String, state: Status): Todo#WithNoId = {
+  def apply(categoryId: Long,title: String, body: String, state: Status): WithNoId = {
     new Entity.WithNoId(
       new Todo(
         id    = None,
@@ -41,5 +40,7 @@ object Todo {
       )
     )
   }
-  case class FormValue (categoryId: Long, title: String, body: String)
+  case class FormValue (
+    // categoryId: Long,
+    title: String, body: String)
 }

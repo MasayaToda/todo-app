@@ -44,7 +44,7 @@ case class ViewValueTodoAdd(
 ) extends ViewValueTodo
 
 case class TodoForm(
-    categoryId: Long,
+    // categoryId: Long,
     title: String,
     body: String,
 )

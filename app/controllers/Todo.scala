@@ -14,17 +14,25 @@ import play.api.i18n.I18nSupport
 import ixias.model.IdStatus.Exists
 
 import lib.model.Todo
+import lib.model.Todo._
 import lib.persistence.default.TodoRepository
 
 import model._
 import java.lang.Exception
+
 
 @Singleton
 class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 )(implicit ec: ExecutionContext
 )extends BaseController with I18nSupport {
-  
+  val todoForm: Form[Todo.FormValue] = Form (
+      mapping(
+        // "categoryId" -> longNumber,
+        "title" -> nonEmptyText,
+        "body"  -> nonEmptyText,
+      )(Todo.FormValue.apply)(Todo.FormValue.unapply)
+    )
   def page_list() = Action async { implicit req =>
     for {
       todo <- TodoRepository.index()
@@ -53,29 +61,38 @@ class TodoController @Inject()(
     }
   }
   def page_add() = Action { implicit req =>
-    val todoForm = Form (
-      mapping(
-        "categoryId" -> longNumber,
-        "title" -> nonEmptyText,
-        "body"  -> nonEmptyText,
-      )(Todo.FormValue.apply)(Todo.FormValue.unapply)
-    )
     val vv = ViewValueTodoAdd(
       form = todoForm
     )
     Ok(views.html.todo.add(vv))
   }
-  def add() = Action { implicit req =>
-    val todoForm = Form (
-      mapping(
-        "categoryId" -> longNumber,
-        "title" -> nonEmptyText,
-        "body"  -> nonEmptyText,
-      )(Todo.FormValue.apply)(Todo.FormValue.unapply)
+  def page_add_submit() = Action async { implicit req =>
+    todoForm.bindFromRequest.fold(
+      errorform => {
+        // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
+        for {
+          todo <- TodoRepository.index()
+        } yield {
+          val vv = ViewValueError(
+            message = errorform.toString
+          )
+          BadRequest(views.html.error(vv))
+        }
+      },
+      successform => {
+        val todo = Todo.apply(
+          1, // categoryID 一旦固定値
+          successform.title,
+          successform.body,
+          Todo.Status.IS_INACTIVE
+        )
+        for {
+          _ <- TodoRepository.add(todo)
+        } yield {
+          Redirect(routes.TodoController.page_list())
+                  .flashing("success" -> "Todoを追加しました!!")
+        }
+      }
     )
-    val vv = ViewValueTodoAdd(
-      form = todoForm
-    )
-    Ok(views.html.todo.add(vv))
   }
 }

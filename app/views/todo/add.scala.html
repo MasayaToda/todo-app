@@ -5,16 +5,14 @@
     <div class="card-header d-flex">
       <div class="flex-grow-1">Todo一覧</div>
     </div>
-    @form(action = controllers.routes.TodoController.add()){
+    @form(action = controllers.routes.TodoController.page_add_submit()){
       @CSRF.formField
       <div class="card-body">
         <div class="mb-3">
-          <label for="input_title" class="form-label">タイトル</label>
           @inputText(vv.form("title"), 'class -> "form-control", 'placeholder -> "何かタイトル")
         </div>
         <div class="mb-3">
-          <label for="input_body" class="form-label">本文</label>
-          @textarea(vv.form("title"), 'class -> "form-control",'rows -> "5", 'placeholder -> "何かタイトル")
+          @textarea(vv.form("body"), 'class -> "form-control",'rows -> "5", 'placeholder -> "何かタイトル")
         </div>
       </div>
       <div class="card-footer">

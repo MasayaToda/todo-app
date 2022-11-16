@@ -3,8 +3,9 @@ package lib.persistence.db
 import java.time.LocalDateTime
 import slick.jdbc.JdbcProfile
 import ixias.persistence.model.Table
+import ixias.model._
 
-import lib.model.Todo
+import lib.model._
 
 // UserTable: Userテーブルへのマッピングを行う
 //~~~~~~~~~~~~~~

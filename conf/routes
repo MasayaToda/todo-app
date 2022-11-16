@@ -5,11 +5,12 @@
 
 # Todo WebPage
 GET     /page/todo/register          controllers.TodoController.page_add
+POST    /page/todo/create            controllers.TodoController.page_add_submit
 GET     /page/todo/show              controllers.TodoController.page_list
 GET     /page/todo/show/:id          controllers.TodoController.page_show(id:Long)
 # Todo API
 # GET     /api/todo             controllers.TodoController.getAll
-POST    /api/todo             controllers.TodoController.add
+# POST    /api/todo             controllers.TodoController.add
 # GET     /api/todo/:id         controllers.TodoController.get(id)
 # PUT     /api/todo/:id         controllers.TodoController.update(id)
 # DELETE  /api/todo/:id         controllers.TodoController.delete(id)

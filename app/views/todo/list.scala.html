@@ -13,8 +13,21 @@
           @for(v <- vv.data){
             <a href="@controllers.routes.TodoController.page_show(v.id.getOrElse(0))" class="list-group-item list-group-item-action" aria-current="true">
               <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@v.title</h5>
-                <small>@v.updatedAt</small>
+                <h5 class="mb-1">@v.id <span class="badge bg-secondary">カテゴリ: @v.categoryId</span> @v.title</h5>
+                <div class="d-flex flex-column">
+                  <small>作成: @v.createdAt</small>
+                  <small>更新: @v.updatedAt</small>
+                </div>
+              </div>
+              <div class="progress">
+                @if(v.state.code.toInt == 0){
+                  <div class="progress-bar" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">@v.state.name</div>
+                }else if(v.state.code.toInt == 1){
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">@v.state.name</div>
+                }else if(v.state.code.toInt == 2){
+                  <div class="progress-bar bg-success" role="progressbar" style="width:100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">@v.state.name</div>
+                }
+                
               </div>
               <p class="mb-1">@v.body</p>
             </a>

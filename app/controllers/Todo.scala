@@ -31,7 +31,7 @@ class TodoController @Inject()(
       val vv = ViewValueTodoList(
         data = todo
       )
-      Ok(views.html.todo.list(vv)(views.html.todo.add(vv)))
+      Ok(views.html.todo.list(vv))
     }
   }
 

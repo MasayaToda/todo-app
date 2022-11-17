@@ -154,8 +154,7 @@ class TodoController @Inject()(
           todo <- TodoRepository.update(todoEmbededId)
         } yield {
           todo match {
-            case None => Redirect(routes.TodoController.page_edit(id))
-            .flashing("error" -> "存在しないIDです!!")
+            case None => NotFound("Todo=" + id + " は存在しません。")
             case Some(_) => Redirect(routes.TodoController.page_list())
                 .flashing("success" -> "Todoを更新しました!!")
           }

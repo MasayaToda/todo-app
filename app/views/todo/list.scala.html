@@ -1,7 +1,29 @@
-@(vv: model.ViewValueTodoList)
+@(vv: model.ViewValueTodoList)(implicit flash: Flash)
 @common.default(vv){
   <div class="row">
     <div class="col-sm-12">
+      @if(flash.get("success").getOrElse("") ne ""){
+        <div class="alert alert-info alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("success").getOrElse("")
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }else if(flash.get("warning").getOrElse("") ne ""){
+        <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("error").getOrElse("")
+          </div>
+          <button type="warning" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }else if(flash.get("error").getOrElse("") ne ""){
+        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("error").getOrElse("")
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }
       <div class="card">
         <div class="card-header d-flex">
           <div class="flex-grow-1">Todo一覧</div>

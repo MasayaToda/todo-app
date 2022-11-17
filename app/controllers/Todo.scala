@@ -130,7 +130,7 @@ class TodoController @Inject()(
         todoDelete match {
           case _ =>
             Redirect(routes.TodoController.page_list())
-              .flashing("success" -> "Todoを削除しました")
+              .flashing("warning" -> "Todoを削除しました")
         }
       }
   }

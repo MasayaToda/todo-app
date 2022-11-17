@@ -1,11 +1,11 @@
 @import helper._
-@(vv:model.ViewValueTodoAdd)(implicit requestHeader: RequestHeader, messagesPrivider: MessagesProvider)
+@(vv:model.ViewValueTodoEdit)(implicit requestHeader: RequestHeader, messagesPrivider: MessagesProvider)
 @common.default(vv){
   <div class="card">
     <div class="card-header d-flex">
-      <div class="flex-grow-1">Todo追加</div>
+      <div class="flex-grow-1">Todo編集</div>
     </div>
-    @form(action = controllers.routes.TodoController.page_add_submit()){
+    @form(action = controllers.routes.TodoController.page_update_submit(vv.data.id.getOrElse(0))){
       @CSRF.formField
       <div class="card-body">
         <div class="mb-3">
@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="card-footer">
-        <button type="submit" class="btn btn-primary">追加</button>
+        <button type="submit" class="btn btn-primary">更新</button>
       </div>
     }
   </div>

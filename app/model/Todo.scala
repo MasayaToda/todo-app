@@ -1,5 +1,8 @@
 package model
 
+import java.time.LocalDate
+import play.api.data.Form
+import play.api.data.Forms._
 import lib.model.Todo
 import lib.model.Todo._
 /**
@@ -30,3 +33,23 @@ case class ViewValueTodoList(
 case class ViewValueTodoShow(
   data: Todo 
 ) extends ViewValueTodo
+
+/**
+  * Todo登録のViewValue
+  *
+  * @param data
+  */
+case class ViewValueTodoAdd(
+  form: Form[TodoForm] 
+) extends ViewValueTodo
+
+case class ViewValueTodoEdit(
+  data: Todo ,
+  form: Form[TodoForm] 
+) extends ViewValueTodo
+
+case class TodoForm(
+    // categoryId: Long,
+    title: String,
+    body: String,
+)

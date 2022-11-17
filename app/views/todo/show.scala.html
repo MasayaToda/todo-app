@@ -5,8 +5,12 @@
       <div class="card">
         <div class="card-header d-flex">
           <div class="flex-grow-1">@v.data.title</div>
-          <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-primary">Todo編集</button></div>
-          <div class="bd-highlight"><button id="openAddTodoDialog" class="btn btn-danger">Todo削除</button></div>
+          <div class="bd-highlight">
+            <a id="openAddTodoDialog" href="@controllers.routes.TodoController.page_edit(v.data.id.getOrElse(0))" class="btn btn-primary">Todo編集</a>
+          </div>
+          <div class="bd-highlight">
+            <a id="openAddTodoDialog" href="@controllers.routes.TodoController.page_delete(v.data.id.getOrElse(0))" class="btn btn-danger">Todo削除</a>
+          </div>
         </div>
         <div class="card-body">
           <p class="card-text">@v.data.body</p>

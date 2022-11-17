@@ -40,12 +40,12 @@ case class ViewValueTodoShow(
   * @param data
   */
 case class ViewValueTodoAdd(
-  form: Form[FormValue] 
+  form: Form[TodoForm] 
 ) extends ViewValueTodo
 
 case class ViewValueTodoEdit(
   data: Todo ,
-  form: Form[FormValue] 
+  form: Form[TodoForm] 
 ) extends ViewValueTodo
 
 case class TodoForm(

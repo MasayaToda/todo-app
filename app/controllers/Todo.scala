@@ -26,12 +26,12 @@ class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 )(implicit ec: ExecutionContext
 )extends BaseController with I18nSupport {
-  val todoForm: Form[Todo.FormValue] = Form (
+  val todoForm: Form[TodoForm] = Form (
       mapping(
         // "categoryId" -> longNumber,
         "title" -> nonEmptyText,
         "body"  -> nonEmptyText,
-      )(Todo.FormValue.apply)(Todo.FormValue.unapply)
+      )(TodoForm.apply)(TodoForm.unapply)
     )
   def page_list() = Action async { implicit req =>
     for {
@@ -77,7 +77,7 @@ class TodoController @Inject()(
           val vv = ViewValueTodoEdit(
             data = todoEmbed.v,
             form = todoForm.fill(
-              Todo.FormValue(
+              TodoForm(
                 todoEmbed.v.title,
                 todoEmbed.v.body,
               )

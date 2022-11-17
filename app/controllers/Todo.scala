@@ -151,10 +151,14 @@ class TodoController @Inject()(
           state = Todo.Status.IS_INACTIVE,
         ).toEmbeddedId //EmbededId型に変換
         for {
-          _ <- TodoRepository.update(todoEmbededId)
+          todo <- TodoRepository.update(todoEmbededId)
         } yield {
-          Redirect(routes.TodoController.page_list())
-                  .flashing("success" -> "Todoを更新しました!!")
+          todo match {
+            case None => Redirect(routes.TodoController.page_edit(id))
+            .flashing("error" -> "存在しないIDです!!")
+            case Some(_) => Redirect(routes.TodoController.page_list())
+                .flashing("success" -> "Todoを更新しました!!")
+          }
         }
       }
     )

@@ -12,7 +12,7 @@
       }else if(flash.get("warning").getOrElse("") ne ""){
         <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
           <div>
-              @flash.get("error").getOrElse("")
+              @flash.get("warning").getOrElse("")
           </div>
           <button type="warning" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -35,7 +35,7 @@
           @for(v <- vv.data){
             <a href="@controllers.routes.TodoController.page_show(v.id)" class="list-group-item list-group-item-action" aria-current="true">
               <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">@v.id <span class="badge bg-@v.categoryColor.getOrElse('secondary)">@v.categoryName.getOrElse('未設定)</span> @v.title</h5>
+                <h5 class="mb-1">@v.id <span class="badge rounded-pill bg-@v.categoryColor.getOrElse('secondary)">@v.categoryName.getOrElse('未設定)</span> @v.title</h5>
                 <div class="d-flex flex-column">
                   <small>作成: @v.createdAt</small>
                   <small>更新: @v.updatedAt</small>

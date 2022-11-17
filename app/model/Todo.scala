@@ -42,20 +42,21 @@ case class ViewValueTodoShow(
   */
 case class ViewValueTodoAdd(
   categories: Seq[(String,String)],
-  form: Form[TodoFormValue] 
+  form: Form[TodoForm] 
 ) extends ViewValueTodo
 
 case class ViewValueTodoEdit(
   categories: Seq[(String,String)],
   id: Long ,
-  form: Form[TodoFormValue] 
+  form: Form[TodoForm] 
 ) extends ViewValueTodo
 
-case class TodoForm(
-    // categoryId: Long,
+case class TodoForm (
+    categoryId: Long,
     title: String,
     body: String,
-)
+    state: Short,
+  )
 case class TodoCategory(
     id: Todo.Id,
     categoryId: Category.Id,

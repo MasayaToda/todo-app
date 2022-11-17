@@ -25,13 +25,13 @@ class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 )(implicit ec: ExecutionContext
 )extends BaseController with I18nSupport {
-  val todoForm: Form[Todo.TodoFormValue] = Form (
+  val todoForm: Form[TodoForm] = Form (
       mapping(
         "categoryId" -> longNumber,
         "title" -> nonEmptyText,
         "body"  -> nonEmptyText,
         "state" -> shortNumber,
-      )(Todo.TodoFormValue.apply)(Todo.TodoFormValue.unapply)
+      )(TodoForm.apply)(TodoForm.unapply)
     )
   def page_list() = Action async { implicit req =>
     for {
@@ -109,7 +109,7 @@ class TodoController @Inject()(
             categories = categoryEmbed.map(category => (category.id.toString -> category.v.name)),
             id = todoEmbed.id,
             form = todoForm.fill(
-              Todo.TodoFormValue(
+              TodoForm(
                 todoEmbed.v.categoryId,
                 todoEmbed.v.title,
                 todoEmbed.v.body,
@@ -185,10 +185,13 @@ class TodoController @Inject()(
           state = Todo.Status.apply(successform.state.toShort),
         ).toEmbeddedId //EmbededId型に変換
         for {
-          _ <- TodoRepository.update(todoEmbededId)
+          todo <- TodoRepository.update(todoEmbededId)
         } yield {
-          Redirect(routes.TodoController.page_list())
-                  .flashing("success" -> "Todoを更新しました!!")
+          todo match {
+            case None => NotFound("Todo=" + id + " は存在しません。")
+            case Some(_) => Redirect(routes.TodoController.page_list())
+                .flashing("success" -> "Todoを更新しました!!")
+          }
         }
       }
     )

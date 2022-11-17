@@ -40,10 +40,4 @@ object Todo {
       )
     )
   }
-  case class TodoFormValue (
-    categoryId: Long,
-    title: String,
-    body: String,
-    state: Short,
-  )
 }

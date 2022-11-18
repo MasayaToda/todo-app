@@ -157,15 +157,10 @@ class TodoController @Inject()(
     val todoRepo = TodoRepository.list()
     todoForm.bindFromRequest.fold(
       errorform => {
-        // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
-        for {
-          todo <- todoRepo
-        } yield {
-          val vv = ViewValueError(
+        val vv = ViewValueError(
             message = errorform.toString
           )
-          BadRequest(views.html.error(vv))
-        }
+        Future.successful(BadRequest(views.html.error(vv)))
       },
       successform => {
         val todo = Todo.apply(
@@ -188,15 +183,10 @@ class TodoController @Inject()(
     val todoRepo = TodoRepository.list()
     todoForm.bindFromRequest.fold(
       errorform => {
-        // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
-        for {
-          todo <- todoRepo
-        } yield {
-          val vv = ViewValueError(
+        val vv = ViewValueError(
             message = errorform.toString
           )
-          BadRequest(views.html.error(vv))
-        }
+        Future.successful(BadRequest(views.html.error(vv)))
       },
       successform => {
         val todoEmbededId = new Todo(

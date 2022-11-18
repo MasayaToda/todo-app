@@ -11,7 +11,7 @@ case class CategoryRepository[P <: JdbcProfile]()(implicit val driver: P)
   with db.SlickResourceProvider[P] {
 
   import api._
-  def index(): Future[Seq[EntityEmbeddedId]] =
+  def list(): Future[Seq[EntityEmbeddedId]] =
     RunDBAction(CategoryTable, "slave") { _
       .result
   }

@@ -9,7 +9,10 @@ import scala.util.{Success, Failure}
 import play.api._
 import play.api.mvc._
 import play.api.data.Form
+import play.api.data.FormError
 import play.api.data.Forms._
+import play.api.data.format.{ Formats, Formatter }
+import play.api.data.format.Formats._
 import play.api.i18n.I18nSupport
 import ixias.model.IdStatus.Exists
 
@@ -25,18 +28,28 @@ class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 )(implicit ec: ExecutionContext
 )extends BaseController with I18nSupport {
+  // categoryIdのカスタムフォーマット定義
+  implicit val categoryIdFormatter = new Formatter[Category.Id] {
+    def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Category.Id] =
+      Formats.longFormat.bind(key, data).right.map(Category.Id.apply)
+
+    def unbind(key: String, value: Category.Id): Map[String, String] = Map(key -> value.toString)
+  }
+  val categoryIdMapping = of[Category.Id]
   val todoForm: Form[TodoForm] = Form (
       mapping(
-        "categoryId" -> longNumber,
+        "categoryId" -> categoryIdMapping, // カスタムマッピング
         "title" -> nonEmptyText,
         "body"  -> nonEmptyText,
         "state" -> shortNumber,
       )(TodoForm.apply)(TodoForm.unapply)
     )
   def page_list() = Action async { implicit req =>
+    val todoRepo = TodoRepository.list()
+    val categoryRepo = CategoryRepository.list()
     for {
-      todoEmbed <- TodoRepository.index()
-      categoryEmbed <- CategoryRepository.index()
+      todoEmbed <- todoRepo
+      categoryEmbed <- categoryRepo
     } yield {
       val vv = ViewValueTodoList(
         data = todoEmbed.map(todo=>{
@@ -58,9 +71,11 @@ class TodoController @Inject()(
   }
 
   def page_show(id:Long) = Action async { implicit req =>
+    val todoRepo = TodoRepository.get(Todo.Id(id))
+    val categoryRepo = CategoryRepository.list()
     for {
-      optionTodo <- TodoRepository.get(Todo.Id(id))
-      categoryEmbed <- CategoryRepository.index()
+      optionTodo <- todoRepo
+      categoryEmbed <- categoryRepo
     } yield {
       optionTodo match {
         case None => NotFound("Todo=" + id + " は存在しません。");
@@ -85,11 +100,12 @@ class TodoController @Inject()(
     }
   }
   def page_add() = Action async { implicit req =>
+    val categoryRepo = CategoryRepository.list()
     for {
-      categoryEmbed <- CategoryRepository.index()
+      categoryEmbed <- categoryRepo
     } yield {
       val vv = ViewValueTodoAdd(
-        categories = categoryEmbed.map(category => (category.id.toString -> category.v.name)),
+        categories = categoryEmbed.map(category => Category.ViewSelectList(category.id.toString, category.v.name)),
         form = todoForm
       )
       Ok(views.html.todo.add(vv))
@@ -97,16 +113,18 @@ class TodoController @Inject()(
     
   }
   def page_edit(id:Long) = Action async { implicit req =>
+    val todoRepo = TodoRepository.get(Todo.Id(id))
+    val categoryRepo = CategoryRepository.list()
     for {
-      optionTodo <- TodoRepository.get(Todo.Id(id))
-      categoryEmbed <- CategoryRepository.index()
+      optionTodo <- todoRepo
+      categoryEmbed <- categoryRepo
     } yield {
       optionTodo match {
         case None => NotFound("Todo=" + id + " は存在しません。");
         case Some(todoEmbed) => {
           // println(todo)
           val vv = ViewValueTodoEdit(
-            categories = categoryEmbed.map(category => (category.id.toString -> category.v.name)),
+            categories = categoryEmbed.map(category => Category.ViewSelectList(category.id.toString, category.v.name)),
             id = todoEmbed.id,
             form = todoForm.fill(
               TodoForm(
@@ -124,8 +142,9 @@ class TodoController @Inject()(
   }
   def page_delete(id: Long) = Action async { implicit req =>
       val todoId = Todo.Id(id)
+      val todoRepo = TodoRepository.remove(todoId)
       for {
-        todoDelete <- TodoRepository.remove(todoId)
+        todoDelete <- todoRepo
       } yield {
         todoDelete match {
           case _ =>
@@ -137,25 +156,22 @@ class TodoController @Inject()(
   def page_add_submit() = Action async { implicit req =>
     todoForm.bindFromRequest.fold(
       errorform => {
-        // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
-        for {
-          todo <- TodoRepository.index()
-        } yield {
-          val vv = ViewValueError(
+        val vv = ViewValueError(
             message = errorform.toString
           )
-          BadRequest(views.html.error(vv))
-        }
+        Future.successful(BadRequest(views.html.error(vv)))
       },
       successform => {
+        
         val todo = Todo.apply(
           Category.Id(successform.categoryId),
           successform.title,
           successform.body,
           Todo.Status.apply(successform.state.toShort)
         )
+        val todoAddRepo = TodoRepository.add(todo)
         for {
-          _ <- TodoRepository.add(todo)
+          _ <- todoAddRepo
         } yield {
           Redirect(routes.TodoController.page_list())
                   .flashing("success" -> "Todoを追加しました!!")
@@ -166,15 +182,10 @@ class TodoController @Inject()(
   def page_update_submit(id:Long) = Action async { implicit req =>
     todoForm.bindFromRequest.fold(
       errorform => {
-        // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
-        for {
-          todo <- TodoRepository.index()
-        } yield {
-          val vv = ViewValueError(
+        val vv = ViewValueError(
             message = errorform.toString
           )
-          BadRequest(views.html.error(vv))
-        }
+        Future.successful(BadRequest(views.html.error(vv)))
       },
       successform => {
         val todoEmbededId = new Todo(
@@ -183,9 +194,10 @@ class TodoController @Inject()(
           title = successform.title,
           body = successform.body,
           state = Todo.Status.apply(successform.state.toShort),
-        ).toEmbeddedId //EmbededId型に変換
+          ).toEmbeddedId //EmbededId型に変換
+        val todoUpdateRepo = TodoRepository.update(todoEmbededId)
         for {
-          todo <- TodoRepository.update(todoEmbededId)
+          todo <- todoUpdateRepo
         } yield {
           todo match {
             case None => NotFound("Todo=" + id + " は存在しません。")

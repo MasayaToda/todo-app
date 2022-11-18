@@ -16,7 +16,7 @@
           @inputText(vv.form("categoryId"), 'class -> "form-control", 'list -> "categoryList", 'placeholder -> "何かカテゴリ")
           <datalist id="categoryList">
             @for(category <- vv.categories){
-              <option value="@category._1">@category._2</option>
+              <option value="@category.id">@category.name</option>
             }
           </datalist>
         </div>

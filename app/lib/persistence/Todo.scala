@@ -4,7 +4,7 @@ import scala.concurrent.Future
 import slick.jdbc.JdbcProfile
 import ixias.persistence.SlickRepository
 
-import lib.model.Todo  // ixias.modelで定義したものをimport
+import lib.model.{Todo,Category}  // ixias.modelで定義したものをimport
 
 case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
   extends SlickRepository[Todo.Id, Todo, P]
@@ -47,6 +47,17 @@ case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
         _   <- old match {
           case None    => DBIO.successful(0)
           case Some(_) => row.delete
+        }
+      } yield old
+    }
+  def removeCategoryId(categoryId: Category.Id): Future[Option[EntityEmbeddedId]] =
+    RunDBAction(TodoTable) { slick =>
+      val row = slick.filter(_.category_id === categoryId)
+      for {
+        old <- row.result.headOption
+        _ <- old match {
+          case None    => DBIO.successful(0)
+          case Some(_) => row.map(_.category_id).update(Category.Id(0))
         }
       } yield old
     }

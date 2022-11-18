@@ -14,7 +14,7 @@ import play.api.i18n.I18nSupport
 import ixias.model.IdStatus.Exists
 
 import lib.model._
-import lib.persistence.default.CategoryRepository
+import lib.persistence.default.{TodoRepository, CategoryRepository}
 
 import model._
 import java.lang.Exception
@@ -92,6 +92,7 @@ class CategoryController @Inject()(
       val categoryId = Category.Id(id)
       for {
         categoryDelete <- CategoryRepository.remove(categoryId)
+        todoUpdate <- TodoRepository.removeCategoryId(categoryId)
       } yield {
         categoryDelete match {
           case _ =>

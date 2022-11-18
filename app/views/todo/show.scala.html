@@ -4,19 +4,34 @@
     <div class="col-sm-12">
       <div class="card">
         <div class="card-header d-flex">
-          <div class="flex-grow-1">@v.data.title</div>
-          <div class="bd-highlight">
-            <a id="openAddTodoDialog" href="@controllers.routes.TodoController.page_edit(v.data.id.getOrElse(0))" class="btn btn-primary">Todo編集</a>
+          <div class="flex-grow-1">
+            <h5 class="mb-1">
+              @v.data.id
+              <span class="badge rounded-pill bg-@v.data.categoryColor.getOrElse('secondary)">@v.data.categoryName.getOrElse('未設定)</span>
+              @v.data.title
+            </h5>
           </div>
           <div class="bd-highlight">
-            <a id="openAddTodoDialog" href="@controllers.routes.TodoController.page_delete(v.data.id.getOrElse(0))" class="btn btn-danger">Todo削除</a>
+            <a id="openAddTodoDialog" href="@controllers.routes.TodoController.page_edit(v.data.id)" class="btn btn-primary">Todo編集</a>
+          </div>
+          <div class="bd-highlight">
+            <a id="openAddTodoDialog" href="@controllers.routes.TodoController.page_delete(v.data.id)" class="btn btn-danger">Todo削除</a>
           </div>
         </div>
         <div class="card-body">
-          <p class="card-text">@v.data.body</p>
+          <div class="progress">
+            @if(v.data.state.code.toInt == 0){
+              <div class="progress-bar" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">@v.data.state.name</div>
+            }else if(v.data.state.code.toInt == 1){
+              <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">@v.data.state.name</div>
+            }else if(v.data.state.code.toInt == 2){
+              <div class="progress-bar bg-success" role="progressbar" style="width:100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">@v.data.state.name</div>
+            }
+          </div>
+          <p class="card-text" style="white-space: pre-wrap;">@v.data.body</p>
         </div>
         <div class="card-footer text-muted">
-          @v.data.updatedAt
+          作成日:@v.data.createdAt 更新日:@v.data.updatedAt
         </div>
       </div>
     </div>

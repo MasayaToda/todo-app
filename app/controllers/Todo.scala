@@ -154,7 +154,6 @@ class TodoController @Inject()(
       }
   }
   def page_add_submit() = Action async { implicit req =>
-    val todoRepo = TodoRepository.list()
     todoForm.bindFromRequest.fold(
       errorform => {
         val vv = ViewValueError(
@@ -163,6 +162,7 @@ class TodoController @Inject()(
         Future.successful(BadRequest(views.html.error(vv)))
       },
       successform => {
+        
         val todo = Todo.apply(
           Category.Id(successform.categoryId),
           successform.title,
@@ -180,7 +180,6 @@ class TodoController @Inject()(
     )
   }
   def page_update_submit(id:Long) = Action async { implicit req =>
-    val todoRepo = TodoRepository.list()
     todoForm.bindFromRequest.fold(
       errorform => {
         val vv = ViewValueError(

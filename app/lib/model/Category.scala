@@ -20,6 +20,8 @@ object Category {
   type Id = Long @@ Category
   type WithNoId = Entity.WithNoId [Id, Category]
   type EmbeddedId = Entity.EmbeddedId[Id, Category]
+
+  case class ViewSelectList(val id:String,val name:String)
   // Color定義
   //~~~~~~~~~~~~~~~~~
   sealed abstract class Color(val code: Short, val name: String, val css: String) extends EnumStatus

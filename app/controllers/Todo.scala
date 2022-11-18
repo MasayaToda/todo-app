@@ -94,7 +94,7 @@ class TodoController @Inject()(
       categoryEmbed <- categoryRepo
     } yield {
       val vv = ViewValueTodoAdd(
-        categories = categoryEmbed.map(category => (category.id.toString -> category.v.name)),
+        categories = categoryEmbed.map(category => Category.ViewSelectList(category.id.toString, category.v.name)),
         form = todoForm
       )
       Ok(views.html.todo.add(vv))
@@ -113,7 +113,7 @@ class TodoController @Inject()(
         case Some(todoEmbed) => {
           // println(todo)
           val vv = ViewValueTodoEdit(
-            categories = categoryEmbed.map(category => (category.id.toString -> category.v.name)),
+            categories = categoryEmbed.map(category => Category.ViewSelectList(category.id.toString, category.v.name)),
             id = todoEmbed.id,
             form = todoForm.fill(
               TodoForm(

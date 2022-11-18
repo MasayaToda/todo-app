@@ -41,13 +41,13 @@ case class ViewValueTodoShow(
   * @param data
   */
 case class ViewValueTodoAdd(
-  categories: Seq[(String,String)],
+  categories: Seq[Category.ViewSelectList],
   form: Form[TodoForm] 
 ) extends ViewValueTodo
 
 case class ViewValueTodoEdit(
-  categories: Seq[(String,String)],
-  id: Long ,
+  categories: Seq[Category.ViewSelectList],
+  id: Todo.Id ,
   form: Form[TodoForm] 
 ) extends ViewValueTodo
 

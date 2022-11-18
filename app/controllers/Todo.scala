@@ -9,7 +9,10 @@ import scala.util.{Success, Failure}
 import play.api._
 import play.api.mvc._
 import play.api.data.Form
+import play.api.data.FormError
 import play.api.data.Forms._
+import play.api.data.format.{ Formats, Formatter }
+import play.api.data.format.Formats._
 import play.api.i18n.I18nSupport
 import ixias.model.IdStatus.Exists
 
@@ -25,9 +28,17 @@ class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 )(implicit ec: ExecutionContext
 )extends BaseController with I18nSupport {
+  // categoryIdのカスタムフォーマット定義
+  implicit val categoryIdFormatter = new Formatter[Category.Id] {
+    def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Category.Id] =
+      Formats.longFormat.bind(key, data).right.map(Category.Id.apply)
+
+    def unbind(key: String, value: Category.Id): Map[String, String] = Map(key -> value.toString)
+  }
+  val categoryIdMapping = of[Category.Id]
   val todoForm: Form[TodoForm] = Form (
       mapping(
-        "categoryId" -> longNumber,
+        "categoryId" -> categoryIdMapping, // カスタムマッピング
         "title" -> nonEmptyText,
         "body"  -> nonEmptyText,
         "state" -> shortNumber,

@@ -52,7 +52,7 @@ case class ViewValueTodoEdit(
 ) extends ViewValueTodo
 
 case class TodoForm (
-    categoryId: Long,
+    categoryId: Category.Id,
     title: String,
     body: String,
     state: Short,

@@ -34,8 +34,8 @@ class TodoController @Inject()(
       )(TodoForm.apply)(TodoForm.unapply)
     )
   def page_list() = Action async { implicit req =>
-    val todoRepo = TodoRepository.index()
-    val categoryRepo = CategoryRepository.index()
+    val todoRepo = TodoRepository.list()
+    val categoryRepo = CategoryRepository.list()
     for {
       todoEmbed <- todoRepo
       categoryEmbed <- categoryRepo
@@ -61,7 +61,7 @@ class TodoController @Inject()(
 
   def page_show(id:Long) = Action async { implicit req =>
     val todoRepo = TodoRepository.get(Todo.Id(id))
-    val categoryRepo = CategoryRepository.index()
+    val categoryRepo = CategoryRepository.list()
     for {
       optionTodo <- todoRepo
       categoryEmbed <- categoryRepo
@@ -89,7 +89,7 @@ class TodoController @Inject()(
     }
   }
   def page_add() = Action async { implicit req =>
-    val categoryRepo = CategoryRepository.index()
+    val categoryRepo = CategoryRepository.list()
     for {
       categoryEmbed <- categoryRepo
     } yield {
@@ -103,7 +103,7 @@ class TodoController @Inject()(
   }
   def page_edit(id:Long) = Action async { implicit req =>
     val todoRepo = TodoRepository.get(Todo.Id(id))
-    val categoryRepo = CategoryRepository.index()
+    val categoryRepo = CategoryRepository.list()
     for {
       optionTodo <- todoRepo
       categoryEmbed <- categoryRepo
@@ -143,7 +143,7 @@ class TodoController @Inject()(
       }
   }
   def page_add_submit() = Action async { implicit req =>
-    val todoRepo = TodoRepository.index()
+    val todoRepo = TodoRepository.list()
     todoForm.bindFromRequest.fold(
       errorform => {
         // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
@@ -174,7 +174,7 @@ class TodoController @Inject()(
     )
   }
   def page_update_submit(id:Long) = Action async { implicit req =>
-    val todoRepo = TodoRepository.index()
+    val todoRepo = TodoRepository.list()
     todoForm.bindFromRequest.fold(
       errorform => {
         // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す

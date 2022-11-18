@@ -34,7 +34,7 @@ class CategoryController @Inject()(
     )
   def page_list() = Action async { implicit req =>
     for {
-      categoryEmbed <- CategoryRepository.index()
+      categoryEmbed <- CategoryRepository.list()
     } yield {
       val vv = ViewValueCategoryList(
         data = categoryEmbed.map(_.v)
@@ -103,15 +103,10 @@ class CategoryController @Inject()(
   def page_add_submit() = Action async { implicit req =>
     categoryForm.bindFromRequest.fold(
       errorform => {
-        // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
-        for {
-          category <- CategoryRepository.index()
-        } yield {
-          val vv = ViewValueError(
+        val vv = ViewValueError(
             message = errorform.toString
           )
-          BadRequest(views.html.error(vv))
-        }
+        Future.successful(BadRequest(views.html.error(vv)))
       },
       successform => {
         val category = Category.apply(
@@ -131,15 +126,10 @@ class CategoryController @Inject()(
   def page_update_submit(id:Long) = Action async { implicit req =>
     categoryForm.bindFromRequest.fold(
       errorform => {
-        // Future[play.api.mvc.Result]に合わせないとコンパイル通らないので、一旦失敗したら一覧へ戻す
-        for {
-          category <- CategoryRepository.index()
-        } yield {
-          val vv = ViewValueError(
+        val vv = ViewValueError(
             message = errorform.toString
           )
-          BadRequest(views.html.error(vv))
-        }
+        Future.successful(BadRequest(views.html.error(vv)))
       },
       successform => {
         val categoryEmbededId = new Category(

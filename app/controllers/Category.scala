@@ -90,9 +90,11 @@ class CategoryController @Inject()(
   }
   def page_delete(id: Long) = Action async { implicit req =>
       val categoryId = Category.Id(id)
+      val categoryRepo = CategoryRepository.remove(categoryId)
+      val todoRepo = TodoRepository.removeCategoryId(categoryId)
       for {
-        categoryDelete <- CategoryRepository.remove(categoryId)
-        todoUpdate <- TodoRepository.removeCategoryId(categoryId)
+        categoryDelete <- categoryRepo
+        todoUpdate <- todoRepo
       } yield {
         Redirect(routes.CategoryController.page_list())
               .flashing("warning" -> "Categoryを削除しました")

@@ -150,4 +150,92 @@ class CategoryController @Inject()(
       }
     )
   }
+  def api_getAll() = Action async { implicit req =>
+    for {
+      categoryEmbed <- CategoryRepository.list()
+    } yield {
+      val vv = ViewValueCategoryList(
+        data = categoryEmbed.map(_.v)
+      )
+      Ok(views.html.category.list(vv))
+    }
+  }
+  def api_add() = Action async { implicit req =>
+    categoryForm.bindFromRequest.fold(
+      errorform => {
+        val vv = ViewValueError(
+            message = errorform.toString
+          )
+        Future.successful(BadRequest(views.html.error(vv)))
+      },
+      successform => {
+        val category = Category.apply(
+          successform.name,
+          successform.slug,
+          Category.Color.apply(successform.color)
+        )
+        for {
+          _ <- CategoryRepository.add(category)
+        } yield {
+          Redirect(routes.CategoryController.page_list())
+                  .flashing("success" -> "Categoryを追加しました!!")
+        }
+      }
+    )
+  }
+  def api_get(id:Long) = Action async { implicit req =>
+    for {
+      optionCategory <- CategoryRepository.get(Category.Id(id))
+    } yield {
+      optionCategory match {
+        case None => NotFound("Category=" + id + " は存在しません。");
+        case Some(categoryEmbed) => {
+          // println(category)
+          val vv = ViewValueCategoryShow(
+            data = categoryEmbed.v
+          )
+          Ok(views.html.category.show(vv))
+        }
+      }
+    }
+  }
+  def api_update(id:Long) = Action async { implicit req =>
+    categoryForm.bindFromRequest.fold(
+      errorform => {
+        val vv = ViewValueError(
+            message = errorform.toString
+          )
+        Future.successful(BadRequest(views.html.error(vv)))
+      },
+      successform => {
+        val categoryEmbededId = new Category(
+          id = Some(Category.Id(id)),
+          name = successform.name,
+          slug = successform.slug,
+          color = Category.Color.apply(successform.color.toShort),
+        ).toEmbeddedId //EmbededId型に変換
+        for {
+          category <- CategoryRepository.update(categoryEmbededId)
+        } yield {
+          category match {
+            case None => NotFound("Category=" + id + " は存在しません。")
+            case Some(_) => Redirect(routes.CategoryController.page_list())
+                .flashing("success" -> "Categoryを更新しました!!")
+          }
+        }
+      }
+    )
+  }
+  def api_delete(id: Long) = Action async { implicit req =>
+      val categoryId = Category.Id(id)
+      val categoryRepo = CategoryRepository.remove(categoryId)
+      val todoRepo = TodoRepository.removeCategoryId(categoryId)
+      for {
+        categoryDelete <- categoryRepo
+        todoUpdate <- todoRepo
+      } yield {
+        Redirect(routes.CategoryController.page_list())
+              .flashing("warning" -> "Categoryを削除しました")
+      }
+  }
 }

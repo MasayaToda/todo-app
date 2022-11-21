@@ -94,11 +94,8 @@ class CategoryController @Inject()(
         categoryDelete <- CategoryRepository.remove(categoryId)
         todoUpdate <- TodoRepository.removeCategoryId(categoryId)
       } yield {
-        categoryDelete match {
-          case _ =>
-            Redirect(routes.CategoryController.page_list())
+        Redirect(routes.CategoryController.page_list())
               .flashing("warning" -> "Categoryを削除しました")
-        }
       }
   }
   def page_add_submit() = Action async { implicit req =>

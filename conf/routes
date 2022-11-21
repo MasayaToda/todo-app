@@ -11,6 +11,13 @@ GET     /page/todo/show/:id          controllers.TodoController.page_show(id:Lon
 GET     /page/todo/show/:id/edit     controllers.TodoController.page_edit(id:Long)
 GET     /page/todo/show/:id/update     controllers.TodoController.page_update_submit(id:Long)
 GET     /page/todo/show/:id/delete     controllers.TodoController.page_delete(id:Long)
+GET     /page/category/register          controllers.CategoryController.page_add
+POST    /page/category/create            controllers.CategoryController.page_add_submit
+GET     /page/category/show              controllers.CategoryController.page_list
+GET     /page/category/show/:id          controllers.CategoryController.page_show(id:Long)
+GET     /page/category/show/:id/edit     controllers.CategoryController.page_edit(id:Long)
+GET     /page/category/show/:id/update     controllers.CategoryController.page_update_submit(id:Long)
+GET     /page/category/show/:id/delete     controllers.CategoryController.page_delete(id:Long)
 # Todo API
 # GET     /api/todo             controllers.TodoController.getAll
 # POST    /api/todo             controllers.TodoController.add

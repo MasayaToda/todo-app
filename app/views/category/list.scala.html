@@ -1,0 +1,67 @@
+@(vv: model.ViewValueCategoryList)(implicit flash: Flash)
+@common.default(vv){
+  <div class="row">
+    <div class="col-sm-12">
+      @if(flash.get("success").getOrElse("") ne ""){
+        <div class="alert alert-info alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("success").getOrElse("")
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }else if(flash.get("warning").getOrElse("") ne ""){
+        <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("warning").getOrElse("")
+          </div>
+          <button type="warning" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }else if(flash.get("error").getOrElse("") ne ""){
+        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("error").getOrElse("")
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }
+      <div class="card">
+        <div class="card-header d-flex">
+          <div class="flex-grow-1">Category一覧</div>
+          <div class="bd-highlight">
+            <a href="@controllers.routes.CategoryController.page_add()" class="btn btn-primary">Category追加</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row row-cols-3">
+            @for(v <- vv.data){
+              <div class="col my-1">
+                <div class="card" href="@controllers.routes.CategoryController.page_show(v.id.getOrElse(0))">
+                  <a href="@controllers.routes.CategoryController.page_show(v.id.getOrElse(0))"
+                    style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height:100%;
+                    width: 100%;"
+                  ></a>
+                  <div class="card-header d-flex bg-@v.color.css">
+                    <h5 class="mb-1">
+                      @v.id @v.slug
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    @v.name
+                  </div>
+                  <div class="card-footer">
+                    <small>作成: @v.createdAt</small>
+                    <small>更新: @v.updatedAt</small>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

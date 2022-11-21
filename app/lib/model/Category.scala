@@ -26,9 +26,9 @@ object Category {
   //~~~~~~~~~~~~~~~~~
   sealed abstract class Color(val code: Short, val name: String, val css: String) extends EnumStatus
   object Color extends EnumStatus.Of[Color] {
-    case object RED extends Color(code = 1,   name = "Category(着手前)", css = "danger")
-    case object YELLO   extends Color(code = 2, name = "進行中", css = "warning")
-    case object BLUE   extends Color(code = 3, name = "完了", css = "info")
+    case object RED extends Color(code = 1,   name = "Red", css = "danger")
+    case object YELLO   extends Color(code = 2, name = "Yello", css = "warning")
+    case object BLUE   extends Color(code = 3, name = "Blue", css = "info")
   }
   def apply(name: String, slug: String, color: Color): WithNoId = {
     new Entity.WithNoId(
@@ -40,6 +40,4 @@ object Category {
       )
     )
   }
-  case class CategoryFormValue (
-    name: String, slug: String, color: Color)
 }

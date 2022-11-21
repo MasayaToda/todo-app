@@ -1,0 +1,27 @@
+@(v:model.ViewValueCategoryShow)
+@common.default(v){
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header d-flex">
+          <div class="flex-grow-1">
+            <h5 class="mb-1">
+              @v.data.id.getOrElse(0)
+              <span class="badge rounded-pill bg-@v.data.color.css">@v.data.slug</span>
+              @v.data.name
+            </h5>
+          </div>
+          <div class="bd-highlight">
+            <a id="openAddCategoryDialog" href="@controllers.routes.CategoryController.page_edit(v.data.id.getOrElse(0))" class="btn btn-primary">Category編集</a>
+          </div>
+          <div class="bd-highlight">
+            <a id="openAddCategoryDialog" href="@controllers.routes.CategoryController.page_delete(v.data.id.getOrElse(0))" class="btn btn-danger">Category削除</a>
+          </div>
+        </div>
+        <div class="card-footer text-muted">
+          作成日:@v.data.createdAt 更新日:@v.data.updatedAt
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -19,16 +19,16 @@ GET     /page/category/show/:id/edit     controllers.CategoryController.page_edi
 GET     /page/category/show/:id/update   controllers.CategoryController.page_update_submit(id:Long)
 GET     /page/category/show/:id/delete   controllers.CategoryController.page_delete(id:Long)
 # Todo API
-GET     /api/todo                        controllers.TodoController.api_getAll
-POST    /api/todo                        controllers.TodoController.api_add
-GET     /api/todo/:id                    controllers.TodoController.api_get(id:Long)
-PUT     /api/todo/:id                    controllers.TodoController.api_update(id:Long)
-DELETE  /api/todo/:id                    controllers.TodoController.api_delete(id:Long)
+GET     /api/todo                        controllers.api.TodoController.api_getAll
+POST    /api/todo                        controllers.api.TodoController.api_add
+GET     /api/todo/:id                    controllers.api.TodoController.api_get(id:Long)
+PUT     /api/todo/:id                    controllers.api.TodoController.api_update(id:Long)
+DELETE  /api/todo/:id                    controllers.api.TodoController.api_delete(id:Long)
 # category API
-GET     /api/category                        controllers.CategoryController.api_getAll
-POST    /api/category                        controllers.CategoryController.api_add
-GET     /api/category/:id                    controllers.CategoryController.api_get(id:Long)
-PUT     /api/category/:id                    controllers.CategoryController.api_update(id:Long)
-DELETE  /api/category/:id                    controllers.CategoryController.api_delete(id:Long)
+GET     /api/category                        controllers.api.CategoryController.api_getAll
+POST    /api/category                        controllers.api.CategoryController.api_add
+GET     /api/category/:id                    controllers.api.CategoryController.api_get(id:Long)
+PUT     /api/category/:id                    controllers.api.CategoryController.api_update(id:Long)
+DELETE  /api/category/:id                    controllers.api.CategoryController.api_delete(id:Long)
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                    controllers.Assets.versioned(path="/public", file: Asset)

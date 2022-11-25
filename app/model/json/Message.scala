@@ -1,8 +1,6 @@
-package model
+package model.json
 
 import play.api.libs.json._
-import lib.model.Todo
-import lib.model.Todo._
 
 case class MessageJson(
     message: String,

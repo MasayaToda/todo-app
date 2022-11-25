@@ -21,6 +21,7 @@ import lib.model._
 import lib.persistence.default.{TodoRepository, CategoryRepository}
 import play.api.libs.json.JsValue
 import model._
+import model.json._
 import java.lang.Exception
 
 

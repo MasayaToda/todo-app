@@ -17,6 +17,7 @@ import lib.model._
 import lib.persistence.default.{TodoRepository, CategoryRepository}
 
 import model._
+import model.json._
 import java.lang.Exception
 
 

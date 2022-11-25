@@ -42,6 +42,11 @@ class TodoController @Inject()(
       Ok(Json.toJson(json))
     } 
   }
+  def getStatusAll() = Action { implicit req =>
+    val statuses = Todo.Status.statusList
+    val json = statuses.map(StatusResponseBody.write(_))
+    Ok(Json.toJson(json))
+  }
   def add() = Action(parse.json) async { req: Request[JsValue]  =>
     req.body.validate[TodoJsonRequestBody].fold(
       errors => {

@@ -54,3 +54,18 @@ object  TodoCategoryJsonResponseBody {
     )
   }
 }
+
+case class StatusResponseBody(
+  code: Short,
+  name: String
+)
+object  StatusResponseBody {
+  implicit val format: Format[StatusResponseBody] = Format(Json.reads[StatusResponseBody], Json.writes[StatusResponseBody])
+
+  def write(status: Todo.Status): StatusResponseBody = {
+    StatusResponseBody(
+      code   = status.code,
+			name   = status.name,
+    )
+  }
+}

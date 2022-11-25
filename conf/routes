@@ -21,6 +21,7 @@ GET     /page/category/show/:id/delete   controllers.CategoryController.page_del
 # Todo API
 GET     /api/todo                        controllers.api.TodoController.getAll
 POST    /api/todo                        controllers.api.TodoController.add
+GET     /api/todo-status                 controllers.api.TodoController.getStatusAll
 GET     /api/todo/:id                    controllers.api.TodoController.get(id:Long)
 PUT     /api/todo/:id                    controllers.api.TodoController.update(id:Long)
 DELETE  /api/todo/:id                    controllers.api.TodoController.delete(id:Long)

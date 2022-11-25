@@ -45,7 +45,7 @@ class TodoController @Inject()(
         "state" -> shortNumber,
       )(TodoForm.apply)(TodoForm.unapply)
     )
-  def api_getAll() = Action async { implicit req =>
+  def getAll() = Action async { implicit req =>
     val todoRepo = TodoRepository.list()
     val categoryRepo = CategoryRepository.list()
     for {
@@ -56,7 +56,7 @@ class TodoController @Inject()(
       Ok(Json.toJson(json))
     } 
   }
-  def api_add() = Action async { implicit req =>
+  def add() = Action async { implicit req =>
     TodoCategoryJson.form.bindFromRequest.fold(
       errorform => {
         val json = ErrorJson.write(errorform.toString)
@@ -80,7 +80,7 @@ class TodoController @Inject()(
       }
     )
   }
-  def api_get(id:Long) = Action async { implicit req =>
+  def get(id:Long) = Action async { implicit req =>
     val todoRepo = TodoRepository.get(Todo.Id(id))
     val categoryRepo = CategoryRepository.list()
     for {
@@ -99,7 +99,7 @@ class TodoController @Inject()(
       }
     }
   }
-  def api_update(id:Long) = Action async { implicit req =>
+  def update(id:Long) = Action async { implicit req =>
     TodoCategoryJson.form.bindFromRequest.fold(
       errorform => {
         val json = ErrorJson.write(errorform.toString)
@@ -131,7 +131,7 @@ class TodoController @Inject()(
       }
     )
   }
-  def api_delete(id: Long) = Action async { implicit req =>
+  def delete(id: Long) = Action async { implicit req =>
       val todoId = Todo.Id(id)
       val todoRepo = TodoRepository.remove(todoId)
       for {

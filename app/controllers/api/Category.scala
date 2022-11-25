@@ -32,7 +32,7 @@ class CategoryController @Inject()(
         "color"  -> shortNumber,
       )(CategoryForm.apply)(CategoryForm.unapply)
   )
-  def api_getAll() = Action async { implicit req =>
+  def getAll() = Action async { implicit req =>
     for {
       categoryEmbed <- CategoryRepository.list()
     } yield {
@@ -41,7 +41,7 @@ class CategoryController @Inject()(
       Ok(Json.toJson(json))
     }
   }
-  def api_add() = Action async { implicit req =>
+  def add() = Action async { implicit req =>
     categoryForm.bindFromRequest.fold(
       errorform => {
         val json = ErrorJson.write(errorform.toString)
@@ -62,7 +62,7 @@ class CategoryController @Inject()(
       }
     )
   }
-  def api_get(id:Long) = Action async { implicit req =>
+  def get(id:Long) = Action async { implicit req =>
     for {
       optionCategory <- CategoryRepository.get(Category.Id(id))
     } yield {
@@ -75,7 +75,7 @@ class CategoryController @Inject()(
       }
     }
   }
-  def api_update(id:Long) = Action async { implicit req =>
+  def update(id:Long) = Action async { implicit req =>
     categoryForm.bindFromRequest.fold(
       errorform => {
         val json = ErrorJson.write(errorform.toString)
@@ -102,7 +102,7 @@ class CategoryController @Inject()(
       }
     )
   }
-  def api_delete(id: Long) = Action async { implicit req =>
+  def delete(id: Long) = Action async { implicit req =>
       val categoryId = Category.Id(id)
       val categoryRepo = CategoryRepository.remove(categoryId)
       val todoRepo = TodoRepository.removeCategoryId(categoryId)

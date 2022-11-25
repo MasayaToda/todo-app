@@ -8,6 +8,7 @@ import scala.concurrent.Future
 import scala.util.{Success, Failure}
 import play.api._
 import play.api.mvc._
+import play.mvc.BodyParser
 import play.api.libs.json._
 import play.api.data.Form
 import play.api.data.FormError
@@ -37,23 +38,22 @@ class TodoController @Inject()(
       todoEmbeds <- todoRepo
       categoryEmbeds <- categoryRepo
     } yield{
-      val json = todoEmbeds.map(TodoCategoryJson.write(_,categoryEmbeds))
+      val json = todoEmbeds.map(TodoCategoryJsonResponseBody.write(_,categoryEmbeds))
       Ok(Json.toJson(json))
     } 
   }
-  def add() = Action async { implicit req =>
-    TodoCategoryJson.form.bindFromRequest.fold(
-      errorform => {
-        val json = ErrorJson.write(errorform.toString)
+  def add() = Action(parse.json) async { req: Request[JsValue]  =>
+    req.body.validate[TodoJsonRequestBody].fold(
+      errors => {
+        val json = ErrorJson.write(errors.toString)
         Future.successful(BadRequest(Json.toJson(json)))
       },
-      successform => {
-        
+      todoJson => {
         val todo = Todo.apply(
-          Category.Id(successform.categoryId),
-          successform.title,
-          successform.body,
-          Todo.Status.apply(successform.state.toShort)
+          Category.Id(todoJson.categoryId),
+          todoJson.title,
+          todoJson.body,
+          Todo.Status.apply(todoJson.state.toShort)
         )
         val todoAddRepo = TodoRepository.add(todo)
         for {
@@ -78,25 +78,25 @@ class TodoController @Inject()(
           NotFound(Json.toJson(json))
         };
         case Some(todoEmbed) => {
-          val json = TodoCategoryJson.write(todoEmbed,categoryEmbeds)
+          val json = TodoCategoryJsonResponseBody.write(todoEmbed,categoryEmbeds)
           Ok(Json.toJson(json))
         }
       }
     }
   }
-  def update(id:Long) = Action async { implicit req =>
-    TodoCategoryJson.form.bindFromRequest.fold(
-      errorform => {
-        val json = ErrorJson.write(errorform.toString)
+  def update(id:Long) = Action(parse.json) async { implicit req =>
+    req.body.validate[TodoJsonRequestBody].fold(
+      errors => {
+        val json = ErrorJson.write(errors.toString)
         Future.successful(BadRequest(Json.toJson(json)))
       },
-      successform => {
+      todoJson => {
         val todoEmbededId = new Todo(
           id = Some(Todo.Id(id)),
-          categoryId = Category.Id(successform.categoryId),
-          title = successform.title,
-          body = successform.body,
-          state = Todo.Status.apply(successform.state.toShort),
+          categoryId = Category.Id(todoJson.categoryId),
+          title = todoJson.title,
+          body = todoJson.body,
+          state = Todo.Status.apply(todoJson.state.toShort),
           ).toEmbeddedId //EmbededId型に変換
         val todoUpdateRepo = TodoRepository.update(todoEmbededId)
         for {

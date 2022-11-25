@@ -1,20 +1,32 @@
 package model.json
 
 import play.api.libs.json._
+import play.api.libs.json.Reads._
 import java.time.LocalDateTime
 import play.api.data.Form
 import play.api.data.Forms._
 import lib.model.{Todo, Category}
 import lib.model.Todo._
 import lib.model.Category._
+import play.api.libs.functional.syntax._
 
-case class TodoCategoryJsonForm(
+case class TodoJsonRequestBody(
   categoryId: Long,
   title: String,
   body: String,
   state: Short,
 )
-case class TodoCategoryJson(
+
+object  TodoJsonRequestBody {
+  implicit val reads: Reads[TodoJsonRequestBody] = (
+    (JsPath \ "categoryId").read[Long] and
+    (JsPath \ "title").read[String](minLength[String](1)) and
+    (JsPath \ "body").read[String](minLength[String](1)) and
+    (JsPath \ "state").read[Short]
+  )(TodoJsonRequestBody.apply _)
+  implicit val writes: Writes[TodoJsonRequestBody] = Json.writes[TodoJsonRequestBody]
+}
+case class TodoCategoryJsonResponseBody(
     id: Long,
     categoryId: Long,
     title: String,
@@ -25,12 +37,11 @@ case class TodoCategoryJson(
     categoryName: String,
     categoryColor: String,
 )
-object  TodoCategoryJson {
+object  TodoCategoryJsonResponseBody {
+  implicit val format: Format[TodoCategoryJsonResponseBody] = Format(Json.reads[TodoCategoryJsonResponseBody], Json.writes[TodoCategoryJsonResponseBody])
 
-  implicit val format: Format[TodoCategoryJson] = Format(Json.reads[TodoCategoryJson], Json.writes[TodoCategoryJson])
-
-  def write(todo: Todo.EmbeddedId, categories: Seq[Category.EmbeddedId]): TodoCategoryJson = {
-    TodoCategoryJson(
+  def write(todo: Todo.EmbeddedId, categories: Seq[Category.EmbeddedId]): TodoCategoryJsonResponseBody = {
+    TodoCategoryJsonResponseBody(
       id           = todo.id,
 			categoryId   = todo.v.categoryId,
       title        = todo.v.title,
@@ -42,12 +53,4 @@ object  TodoCategoryJson {
       categories.find(_.id == todo.v.categoryId).map(_.v.color.css).getOrElse("未設定"),
     )
   }
-  val form: Form[TodoCategoryJsonForm] = Form(
-    mapping(
-        "categoryId" -> longNumber,
-        "title" -> nonEmptyText,
-        "body"  -> nonEmptyText,
-        "state" -> shortNumber,
-      )(TodoCategoryJsonForm.apply)(TodoCategoryJsonForm.unapply)
-  )
 }

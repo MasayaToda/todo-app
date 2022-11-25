@@ -29,22 +29,6 @@ class TodoController @Inject()(
   val controllerComponents: ControllerComponents
 )(implicit ec: ExecutionContext
 )extends BaseController with I18nSupport {
-  // categoryIdのカスタムフォーマット定義
-  implicit val categoryIdFormatter = new Formatter[Category.Id] {
-    def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Category.Id] =
-      Formats.longFormat.bind(key, data).right.map(Category.Id.apply)
-
-    def unbind(key: String, value: Category.Id): Map[String, String] = Map(key -> value.toString)
-  }
-  val categoryIdMapping = of[Category.Id]
-  val todoForm: Form[TodoForm] = Form (
-      mapping(
-        "categoryId" -> categoryIdMapping, // カスタムマッピング
-        "title" -> nonEmptyText,
-        "body"  -> nonEmptyText,
-        "state" -> shortNumber,
-      )(TodoForm.apply)(TodoForm.unapply)
-    )
   def getAll() = Action async { implicit req =>
     val todoRepo = TodoRepository.list()
     val categoryRepo = CategoryRepository.list()

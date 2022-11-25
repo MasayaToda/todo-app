@@ -33,10 +33,10 @@ class TodoController @Inject()(
     val todoRepo = TodoRepository.list()
     val categoryRepo = CategoryRepository.list()
     for {
-      todoEmbed <- todoRepo
-      categoryEmbed <- categoryRepo
+      todoEmbeds <- todoRepo
+      categoryEmbeds <- categoryRepo
     } yield{
-      val json = todoEmbed.map(TodoCategoryJson.write(_,categoryEmbed))
+      val json = todoEmbeds.map(TodoCategoryJson.write(_,categoryEmbeds))
       Ok(Json.toJson(json))
     } 
   }
@@ -69,7 +69,7 @@ class TodoController @Inject()(
     val categoryRepo = CategoryRepository.list()
     for {
       optionTodo <- todoRepo
-      categoryEmbed <- categoryRepo
+      categoryEmbeds <- categoryRepo
     } yield {
       optionTodo match {
         case None => {
@@ -77,7 +77,7 @@ class TodoController @Inject()(
           NotFound(Json.toJson(json))
         };
         case Some(todoEmbed) => {
-          val json = TodoCategoryJson.write(todoEmbed,categoryEmbed)
+          val json = TodoCategoryJson.write(todoEmbed,categoryEmbeds)
           Ok(Json.toJson(json))
         }
       }

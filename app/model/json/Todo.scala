@@ -27,8 +27,8 @@ case class TodoCategoryJson(
 )
 object  TodoCategoryJson {
 
-	implicit val reads: Reads[TodoCategoryJson]   = Json.reads[TodoCategoryJson]
-  implicit val writes: Writes[TodoCategoryJson] = Json.writes[TodoCategoryJson]
+  implicit val format: Format[TodoCategoryJson] = Format(Json.reads[TodoCategoryJson], Json.writes[TodoCategoryJson])
+
   def write(todo: Todo.EmbeddedId, categories: Seq[Category.EmbeddedId]): TodoCategoryJson = {
     TodoCategoryJson(
       id           = todo.id,

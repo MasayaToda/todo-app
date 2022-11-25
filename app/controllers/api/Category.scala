@@ -37,7 +37,7 @@ class CategoryController @Inject()(
       categoryEmbed <- CategoryRepository.list()
     } yield {
       // val json = categoryEmbed.map(TodoCategoryJson.write(_,categoryEmbed))
-      val json = MessageJson.write("テストデータ")
+      val json = MessageJson("テストデータ")
       Ok(Json.toJson(json))
     }
   }
@@ -56,7 +56,7 @@ class CategoryController @Inject()(
         for {
           _ <- CategoryRepository.add(category)
         } yield {
-          val json = MessageJson.write("登録しました")
+          val json = MessageJson("登録しました")
           Ok(Json.toJson(json))
         }
       }
@@ -69,7 +69,7 @@ class CategoryController @Inject()(
       optionCategory match {
         case None => NotFound("Category=" + id + " は存在しません。");
         case Some(categoryEmbed) => {
-          val json = MessageJson.write("更新しました")
+          val json = MessageJson("更新しました")
           Ok(Json.toJson(json))
         }
       }
@@ -94,7 +94,7 @@ class CategoryController @Inject()(
           category match {
             case None => NotFound("Category=" + id + " は存在しません。")
             case Some(_) => {
-              val json = MessageJson.write("更新しました")
+              val json = MessageJson("更新しました")
               Ok(Json.toJson(json))
             }
           }
@@ -110,7 +110,7 @@ class CategoryController @Inject()(
         categoryDelete <- categoryRepo
         todoUpdate <- todoRepo
       } yield {
-        val json = MessageJson.write("削除しました")
+        val json = MessageJson("削除しました")
         Ok(Json.toJson(json))
       }
   }

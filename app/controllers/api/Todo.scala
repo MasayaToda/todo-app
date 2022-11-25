@@ -74,7 +74,7 @@ class TodoController @Inject()(
         for {
           _ <- todoAddRepo
         } yield {
-          val json = MessageJson.write("登録しました")
+          val json = MessageJson("登録しました")
           Ok(Json.toJson(json))
         }
       }
@@ -123,7 +123,7 @@ class TodoController @Inject()(
               NotFound(Json.toJson(json))
             }
             case Some(_) => {
-              val json = MessageJson.write("Todo=" + id + " を更新しました")
+              val json = MessageJson("Todo=" + id + " を更新しました")
               Ok(Json.toJson(json))
             }
           }
@@ -139,7 +139,7 @@ class TodoController @Inject()(
       } yield {
         todoDelete match {
           case _ =>
-            val json = MessageJson.write("Todo=" + id + " を削除しました")
+            val json = MessageJson("Todo=" + id + " を削除しました")
             Ok(Json.toJson(json))
         }
       }

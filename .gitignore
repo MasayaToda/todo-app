@@ -8,3 +8,6 @@ target
 .metals
 /RUNNING_PID
 docker/db/data/
+.metals
+.bloop
+metals.sbt

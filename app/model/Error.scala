@@ -21,7 +21,7 @@ case class ErrorJson(
 )
 object  ErrorJson {
 
-	implicit val reads: Reads[ErrorJson]   = Json.reads[ErrorJson]
+  implicit val reads: Reads[ErrorJson]   = Json.reads[ErrorJson]
   implicit val writes: Writes[ErrorJson] = Json.writes[ErrorJson]
   def write(message: String): ErrorJson = {
     ErrorJson(

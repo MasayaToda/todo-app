@@ -29,6 +29,11 @@ object Category {
     case object RED extends Color(code = 1,   name = "Red", css = "danger")
     case object YELLO   extends Color(code = 2, name = "Yello", css = "warning")
     case object BLUE   extends Color(code = 3, name = "Blue", css = "info")
+    override def apply(code: Short): Color = code match {
+      case RED.code => RED
+      case YELLO.code => YELLO
+      case BLUE.code => BLUE
+    }
   }
   def apply(name: String, slug: String, color: Color): WithNoId = {
     new Entity.WithNoId(

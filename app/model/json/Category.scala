@@ -12,16 +12,19 @@ import play.api.libs.functional.syntax._
 case class CategoryJsonRequestBody(
   name:  String,
   slug:  String,
-  color: Short,
-)
-
+  color: Category.Color,
+  )
 object  CategoryJsonRequestBody {
+  implicit val readColor: Reads[Category.Color] = (
+    (JsPath \ "code").read[Short] and
+    (JsPath \ "name").read[String](minLength[String](1)) and
+    (JsPath \ "css").read[String]
+  )((code, name, css) => Category.Color(code = code))
   implicit val reads: Reads[CategoryJsonRequestBody] = (
     (JsPath \ "name").read[String](minLength[String](1)) and
     (JsPath \ "slug").read[String](minLength[String](1)) and
-    (JsPath \ "color").read[Short]
+    (JsPath \ "color").read[Category.Color]
   )(CategoryJsonRequestBody.apply _)
-  implicit val writes: Writes[CategoryJsonRequestBody] = Json.writes[CategoryJsonRequestBody]
 }
 case class CategoryJsonResponseBody(
     id:       Long,

@@ -49,7 +49,7 @@ class CategoryController @Inject()(
         val category = Category.apply(
           categoryJson.name,
           categoryJson.slug,
-          Category.Color.apply(categoryJson.color.toShort)
+          categoryJson.color
         )
         val categoryAddRepo = CategoryRepository.add(category)
         for {
@@ -88,7 +88,7 @@ class CategoryController @Inject()(
           id = Some(Category.Id(id)),
           name = categoryJson.name,
           slug = categoryJson.slug,
-          color = Category.Color.apply(categoryJson.color.toShort),
+          color = categoryJson.color,
         ).toEmbeddedId //EmbededId型に変換
         val categoryUpdateRepo = CategoryRepository.update(categoryEmbededId)
         for {

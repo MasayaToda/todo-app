@@ -10,3 +10,4 @@ target
 docker/db/data/
 metals.sbt
 .bloop
+.metals

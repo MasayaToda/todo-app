@@ -43,7 +43,7 @@ object  TodoCategoryJsonResponseBody {
   def write(todo: Todo.EmbeddedId, categories: Seq[Category.EmbeddedId]): TodoCategoryJsonResponseBody = {
     TodoCategoryJsonResponseBody(
       id           = todo.id,
-			categoryId   = todo.v.categoryId,
+      categoryId   = todo.v.categoryId,
       title        = todo.v.title,
       body      = todo.v.body,
       state      = todo.v.state.code,
@@ -65,7 +65,7 @@ object  StatusResponseBody {
   def write(status: Todo.Status): StatusResponseBody = {
     StatusResponseBody(
       code   = status.code,
-			name   = status.name,
+      name   = status.name,
     )
   }
 }

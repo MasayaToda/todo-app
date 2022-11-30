@@ -51,9 +51,8 @@ class CategoryController @Inject()(
           categoryJson.slug,
           categoryJson.color
         )
-        val categoryAddRepo = CategoryRepository.add(category)
         for {
-          categoryAdd <- categoryAddRepo
+          categoryAdd <- CategoryRepository.add(category)
         } yield {
           val json = MessageJson("登録しました")
           Ok(Json.toJson(json))

@@ -1,0 +1,41 @@
+@import helper._
+@import lib.model.{Todo, Category }
+@(vv:model.ViewValueTodoEdit)(implicit requestHeader: RequestHeader, messagesPrivider: MessagesProvider)
+@common.default(vv){
+  <div class="card">
+    <div class="card-header d-flex">
+      <div class="flex-grow-1">Todo編集</div>
+    </div>
+    @form(action = controllers.routes.TodoController.page_update_submit(vv.id)){
+      @CSRF.formField
+      <div class="card-body">
+        <div class="mb-3">
+          @inputText(vv.form("title"), 'class -> "form-control", 'placeholder -> "何かタイトル")
+        </div>
+        <div class="mb-3">
+          @inputText(vv.form("categoryId"), 'class -> "form-control", 'list -> "categoryList", 'placeholder -> "何かカテゴリ")
+          <datalist id="categoryList">
+            @for(category <- vv.categories){
+              <option value="@category.id">@category.name</option>
+            }
+          </datalist>
+        </div>
+        <div class="mb-3">
+          @textarea(vv.form("body"), 'class -> "form-control",'rows -> "5", 'placeholder -> "何かタイトル")
+        </div>
+        <div class="mb-3">
+          @input(vv.form("state")) { (id, name, value, args) =>
+            <select class="form-select" name="@name" id="@id">
+          }
+          @for(status <- Todo.Status.values){
+            <option value="@status.code">@status.name</option>
+          }
+          </select>
+        </div>
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">更新</button>
+      </div>
+    }
+  </div>
+}

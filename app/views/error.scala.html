@@ -1,0 +1,13 @@
+@(vv: model.ViewValueError)
+@common.default(vv){
+  <div class="card">
+    <div class="card-header d-flex">
+      <div class="flex-grow-1">エラー</div>
+    </div>
+    <div class="card-body">
+    <div class="mb-3">
+        @vv
+    </div>
+    </div>
+  </div>
+}

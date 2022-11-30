@@ -1,0 +1,60 @@
+@(vv: model.ViewValueTodoList)(implicit flash: Flash)
+@common.default(vv){
+  <div class="row">
+    <div class="col-sm-12">
+      @if(flash.get("success").getOrElse("") ne ""){
+        <div class="alert alert-info alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("success").getOrElse("")
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }else if(flash.get("warning").getOrElse("") ne ""){
+        <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("warning").getOrElse("")
+          </div>
+          <button type="warning" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }else if(flash.get("error").getOrElse("") ne ""){
+        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" id="alert" role="alert">
+          <div>
+              @flash.get("error").getOrElse("")
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }
+      <div class="card">
+        <div class="card-header d-flex">
+          <div class="flex-grow-1">Todo一覧</div>
+          <div class="bd-highlight">
+            <a href="@controllers.routes.TodoController.page_add()" class="btn btn-primary">Todo追加</a>
+          </div>
+        </div>
+        <div class="list-group">
+          @for(v <- vv.data){
+            <a href="@controllers.routes.TodoController.page_show(v.id)" class="list-group-item list-group-item-action" aria-current="true">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@v.id <span class="badge rounded-pill bg-@v.categoryColor.getOrElse("secondary")">@v.categoryName.getOrElse("未設定")</span> @v.title</h5>
+                <div class="d-flex flex-column">
+                  <small>作成: @v.createdAt</small>
+                  <small>更新: @v.updatedAt</small>
+                </div>
+              </div>
+              <div class="progress">
+                @if(v.state.code.toInt == 0){
+                  <div class="progress-bar" role="progressbar" style="width:25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">@v.state.name</div>
+                }else if(v.state.code.toInt == 1){
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width:50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">@v.state.name</div>
+                }else if(v.state.code.toInt == 2){
+                  <div class="progress-bar bg-success" role="progressbar" style="width:100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">@v.state.name</div>
+                }
+              </div>
+              <p class="mb-1" style="white-space: pre-wrap;">@v.body</p>
+            </a>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

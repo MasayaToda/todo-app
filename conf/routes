@@ -28,6 +28,7 @@ DELETE  /api/todo/:id                    controllers.api.TodoController.delete(i
 # category API
 GET     /api/category                        controllers.api.CategoryController.getAll
 POST    /api/category                        controllers.api.CategoryController.add
+GET     /api/category-color                  controllers.api.CategoryController.getColorAll
 GET     /api/category/:id                    controllers.api.CategoryController.get(id:Long)
 PUT     /api/category/:id                    controllers.api.CategoryController.update(id:Long)
 DELETE  /api/category/:id                    controllers.api.CategoryController.delete(id:Long)

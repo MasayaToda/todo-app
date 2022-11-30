@@ -39,6 +39,11 @@ class CategoryController @Inject()(
       Ok(Json.toJson(json))
     }
   }
+  def getColorAll() = Action { implicit req =>
+    val colors = Category.Color.values
+    val json = colors.map(ColorResponseBody.write(_))
+    Ok(Json.toJson(json))
+  }
   def add() = Action(parse.json) async { implicit req =>
     req.body.validate[CategoryJsonRequestBody].fold(
       errors => {

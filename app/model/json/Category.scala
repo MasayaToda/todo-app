@@ -45,3 +45,19 @@ object  CategoryJsonResponseBody {
     )
   }
 }
+case class ColorResponseBody(
+  code: Short,
+  name: String,
+  css: String,
+)
+object  ColorResponseBody {
+  implicit val format: Format[ColorResponseBody] = Format(Json.reads[ColorResponseBody], Json.writes[ColorResponseBody])
+
+  def write(color: Category.Color): ColorResponseBody = {
+    ColorResponseBody(
+      code   = color.code,
+      name   = color.name,
+      css   = color.name,
+    )
+  }
+}

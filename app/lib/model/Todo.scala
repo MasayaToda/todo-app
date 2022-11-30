@@ -23,6 +23,7 @@ object Todo {
   type EmbeddedId = Entity.EmbeddedId[Id, Todo]
   // ステータス定義
   //~~~~~~~~~~~~~~~~~
+  
   sealed abstract class Status(val code: Short, val name: String) extends EnumStatus
   object Status extends EnumStatus.Of[Status] {
     case object IS_INACTIVE extends Status(code = 0,   name = "TODO(着手前)")

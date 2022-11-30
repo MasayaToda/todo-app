@@ -27,9 +27,9 @@
           @input(vv.form("state")) { (id, name, value, args) =>
             <select class="form-select" name="@name" id="@id">
           }
-            <option value="@Todo.Status.IS_INACTIVE.code">@Todo.Status.IS_INACTIVE.name</option>
-            <option value="@Todo.Status.IS_DOING.code">@Todo.Status.IS_DOING.name</option>
-            <option value="@Todo.Status.IS_DONE.code">@Todo.Status.IS_DONE.name</option>
+          @for(status <- Todo.Status.values){
+            <option value="@status.code">@status.name</option>
+          }
           </select>
         </div>
       </div>

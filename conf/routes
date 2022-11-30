@@ -21,12 +21,14 @@ GET     /page/category/show/:id/delete   controllers.CategoryController.page_del
 # Todo API
 GET     /api/todo                        controllers.api.TodoController.getAll
 POST    /api/todo                        controllers.api.TodoController.add
+GET     /api/todo-status                 controllers.api.TodoController.getStatusAll
 GET     /api/todo/:id                    controllers.api.TodoController.get(id:Long)
 PUT     /api/todo/:id                    controllers.api.TodoController.update(id:Long)
 DELETE  /api/todo/:id                    controllers.api.TodoController.delete(id:Long)
 # category API
 GET     /api/category                        controllers.api.CategoryController.getAll
 POST    /api/category                        controllers.api.CategoryController.add
+GET     /api/category-color                  controllers.api.CategoryController.getColorAll
 GET     /api/category/:id                    controllers.api.CategoryController.get(id:Long)
 PUT     /api/category/:id                    controllers.api.CategoryController.update(id:Long)
 DELETE  /api/category/:id                    controllers.api.CategoryController.delete(id:Long)

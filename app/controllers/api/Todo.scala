@@ -42,6 +42,11 @@ class TodoController @Inject()(
       Ok(Json.toJson(json))
     } 
   }
+  def getStatusAll() = Action { implicit req =>
+    val statuses = Todo.Status.values
+    val json = statuses.map(StatusResponseBody.write(_))
+    Ok(Json.toJson(json))
+  }
   def add() = Action(parse.json) async { req: Request[JsValue]  =>
     req.body.validate[TodoJsonRequestBody].fold(
       errors => {
@@ -55,9 +60,8 @@ class TodoController @Inject()(
           todoJson.body,
           Todo.Status.apply(todoJson.state.toShort)
         )
-        val todoAddRepo = TodoRepository.add(todo)
         for {
-          _ <- todoAddRepo
+          todoAddRepo <- TodoRepository.add(todo)
         } yield {
           val json = MessageJson("登録しました")
           Ok(Json.toJson(json))

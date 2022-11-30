@@ -43,7 +43,7 @@ object  TodoCategoryJsonResponseBody {
   def write(todo: Todo.EmbeddedId, categories: Seq[Category.EmbeddedId]): TodoCategoryJsonResponseBody = {
     TodoCategoryJsonResponseBody(
       id           = todo.id,
-			categoryId   = todo.v.categoryId,
+      categoryId   = todo.v.categoryId,
       title        = todo.v.title,
       body      = todo.v.body,
       state      = todo.v.state.code,
@@ -51,6 +51,21 @@ object  TodoCategoryJsonResponseBody {
       updatedAt = todo.v.updatedAt,
       categories.find(_.id == todo.v.categoryId).map(_.v.name).getOrElse("未設定"),
       categories.find(_.id == todo.v.categoryId).map(_.v.color.css).getOrElse("未設定"),
+    )
+  }
+}
+
+case class StatusResponseBody(
+  code: Short,
+  name: String
+)
+object  StatusResponseBody {
+  implicit val format: Format[StatusResponseBody] = Format(Json.reads[StatusResponseBody], Json.writes[StatusResponseBody])
+
+  def write(status: Todo.Status): StatusResponseBody = {
+    StatusResponseBody(
+      code   = status.code,
+      name   = status.name,
     )
   }
 }

@@ -170,9 +170,8 @@ class TodoController @Inject()(
           successform.body,
           Todo.Status.apply(successform.state.toShort)
         )
-        val todoAddRepo = TodoRepository.add(todo)
         for {
-          _ <- todoAddRepo
+          todoAddRepo <- TodoRepository.add(todo)
         } yield {
           Redirect(routes.TodoController.page_list())
                   .flashing("success" -> "Todoを追加しました!!")

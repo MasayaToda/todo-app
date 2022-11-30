@@ -2,6 +2,7 @@ package model.json
 
 import play.api.libs.json._
 import play.api.libs.json.Reads._
+import ixias.util.json.JsonEnvReads
 import java.time.LocalDateTime
 import play.api.data.Form
 import play.api.data.Forms._
@@ -14,12 +15,8 @@ case class CategoryJsonRequestBody(
   slug:  String,
   color: Category.Color,
   )
-object  CategoryJsonRequestBody {
-  implicit val readColor: Reads[Category.Color] = (
-    (JsPath \ "code").read[Short] and
-    (JsPath \ "name").read[String](minLength[String](1)) and
-    (JsPath \ "css").read[String]
-  )((code, name, css) => Category.Color(code = code))
+object  CategoryJsonRequestBody extends JsonEnvReads {
+  implicit val readColor: Reads[Category.Color] = this.enumReads(Category.Color)
   implicit val reads: Reads[CategoryJsonRequestBody] = (
     (JsPath \ "name").read[String](minLength[String](1)) and
     (JsPath \ "slug").read[String](minLength[String](1)) and

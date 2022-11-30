@@ -35,7 +35,7 @@ case class CategoryJsonResponseBody(
   createdAt:  LocalDateTime
 )
 object  CategoryJsonResponseBody {
-  implicit val format: Format[CategoryJsonResponseBody] = Format(Json.reads[CategoryJsonResponseBody], Json.writes[CategoryJsonResponseBody])
+    implicit val format: Format[CategoryJsonResponseBody] = Json.format
 
   def write(category: Category.EmbeddedId): CategoryJsonResponseBody = {
     CategoryJsonResponseBody(

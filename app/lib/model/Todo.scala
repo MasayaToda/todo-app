@@ -29,7 +29,6 @@ object Todo {
     case object IS_INACTIVE extends Status(code = 0,   name = "TODO(着手前)")
     case object IS_DOING   extends Status(code = 1, name = "進行中")
     case object IS_DONE   extends Status(code = 2, name = "完了")
-    val statusList = Seq(IS_INACTIVE,IS_DOING,IS_DONE)
   }
   def apply(categoryId: Category.Id,title: String, body: String, state: Status): WithNoId = {
     new Entity.WithNoId(

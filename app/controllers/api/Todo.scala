@@ -43,7 +43,7 @@ class TodoController @Inject()(
     } 
   }
   def getStatusAll() = Action { implicit req =>
-    val statuses = Todo.Status.statusList
+    val statuses = Todo.Status.values
     val json = statuses.map(StatusResponseBody.write(_))
     Ok(Json.toJson(json))
   }

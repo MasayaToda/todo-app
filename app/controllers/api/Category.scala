@@ -17,14 +17,16 @@ import play.api.data.format.{ Formats, Formatter }
 import play.api.data.format.Formats._
 import play.api.i18n.I18nSupport
 import ixias.model.IdStatus.Exists
+import cats.data._
+import cats.implicits._
 
 import lib.model._
 import lib.persistence.default.CategoryRepository
+import lib.persistence.default.CategoryRepository._
 import play.api.libs.json.JsValue
 import model._
 import model.json._
 import java.lang.Exception
-
 
 @Singleton
 class CategoryController @Inject()(
@@ -66,20 +68,36 @@ class CategoryController @Inject()(
     )
   }
   def get(id:Long) = Action async { implicit req =>
-    for {
-      optionCategory <- CategoryRepository.get(Category.Id(id))
-    } yield {
-      optionCategory match {
+    for{
+      categoryT <- OptionT.liftF( CategoryRepository.get(Category.Id(id))).getOrElse(None)
+
+    }yield{
+      categoryT match{
+        case Some(category) => {
+          val json = CategoryJsonResponseBody.write(category)
+           Ok(Json.toJson(json))
+        }
         case None => {
           val json = ErrorJson.write("Category=" + id + " は存在しません。")
           NotFound(Json.toJson(json))
-        };
-        case Some(categoryEmbed) => {
-          val json = CategoryJsonResponseBody.write(categoryEmbed)
-          Ok(Json.toJson(json))
         }
       }
     }
+    // 元の実装
+    // for {
+    //   optionCategory <- CategoryRepository.get(Category.Id(id))
+    // } yield {
+    //   optionCategory match {
+    //     case None => {
+    //       val json = ErrorJson.write("Category=" + id + " は存在しません。")
+    //       NotFound(Json.toJson(json))
+    //     };
+    //     case Some(categoryEmbed) => {
+    //       val json = CategoryJsonResponseBody.write(categoryEmbed)
+    //       Ok(Json.toJson(json))
+    //     }
+    //   }
+    // }
   }
   def update(id:Long) = Action(parse.json) async { implicit req =>
     req.body.validate[CategoryJsonRequestBody].fold(

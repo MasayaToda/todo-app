@@ -68,36 +68,14 @@ class CategoryController @Inject()(
     )
   }
   def get(id:Long) = Action async { implicit req =>
-    for{
-      categoryT <- OptionT.liftF( CategoryRepository.get(Category.Id(id))).getOrElse(None)
-
-    }yield{
-      categoryT match{
-        case Some(category) => {
-          val json = CategoryJsonResponseBody.write(category)
-           Ok(Json.toJson(json))
-        }
-        case None => {
-          val json = ErrorJson.write("Category=" + id + " は存在しません。")
-          NotFound(Json.toJson(json))
-        }
-      }
-    }
-    // 元の実装
-    // for {
-    //   optionCategory <- CategoryRepository.get(Category.Id(id))
-    // } yield {
-    //   optionCategory match {
-    //     case None => {
-    //       val json = ErrorJson.write("Category=" + id + " は存在しません。")
-    //       NotFound(Json.toJson(json))
-    //     };
-    //     case Some(categoryEmbed) => {
-    //       val json = CategoryJsonResponseBody.write(categoryEmbed)
-    //       Ok(Json.toJson(json))
-    //     }
-    //   }
-    // }
+    (for{
+      category <- OptionT( CategoryRepository.get(Category.Id(id)))
+    }yield {
+      val json = CategoryJsonResponseBody.write(category)
+      Ok(Json.toJson(json))
+    })
+    .toRight(NotFound(Json.toJson(ErrorJson.write("Category=" + id + " は存在しません。"))))
+      .merge
   }
   def update(id:Long) = Action(parse.json) async { implicit req =>
     req.body.validate[CategoryJsonRequestBody].fold(
